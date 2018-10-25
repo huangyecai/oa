@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>野菜OA</title>
+    <link th:href="@{jquery-easyui-1.6.6/themes/default/easyui.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{jquery-easyui-1.6.6/themes/icon.css}" rel="stylesheet" type="text/css">
+    <script th:src="@{jquery-easyui-1.6.6/jquery.min.js}" type="text/javascript"></script>
+    <script th:src="@{jquery-easyui-1.6.6/jquery.easyui.min.js }" type="text/javascript"></script>
+	<link  id="easyuiTheme" rel="stylesheet"  type="text/css" href="../static/jquery-easyui-1.6.6/themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../static/jquery-easyui-1.6.6/themes/icon.css">
+	 
+	<script type="text/javascript" src="../static/jquery-easyui-1.6.6/jquery.min.js"></script>
+	<script type="text/javascript" src="../static/jquery-easyui-1.6.6/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="../static/jquery-easyui-1.6.6/jquery.cookie.js"></script>
+    <style type="text/css">
+        #header {height:70px;overflow:hidden;}
+        #header .logo {display:block;margin:5px;height:60px;}
+        #header .top-btns {position:absolute;top:20px;right:15px;}
+        #header .top-btns span {vertical-align:middle;}
+        #header .top-btns .easyui-combobox {width:80px;}
+    </style>
+	<script  type="text/javascript" >
+	    /**
+         * easyUI更换主题的方法
+         * @param {Object} themeName 主题的名称
+         * @author ZHENGWEI
+         * @date 2015-5-16
+         */
+        function changeTheme(themeName){
+            var themeCSS = $("#easyuiTheme");
+            var url = themeCSS.attr('href');
+            var href = url.substring(0, url.indexOf('themes')) + 'themes/' + themeName + '/easyui.css';
+            themeCSS.attr('href', href);
+            var iframe = $('iframe');
+            if(iframe.length > 0){
+                for(var i = 0; i < iframe.length; i++){
+                    var ifr = iframe[i];
+                    $(ifr).contents().find('#easyuiTheme').attr('href', href);
+                }
+            }
+            $.cookie('easyuiThemeName', themeName,{
+                     //记住cookie的天数
+                     expires: 7
+            });
+        }
+
+        if($.cookie('easyuiThemeName')){
+            changeTheme($.cookie('easyuiThemeName'));
+        }
+        /* 动态添加Tab */
+        function addTab(title, url){
+            if ($('#tabs').tabs('exists', title)){
+                $('#tabs').tabs('select', title);
+            } else {
+                var content = '<iframe scrolling="auto" frameborder="0"  src="'+url+'" style="width:100%;height:100%;"></iframe>';
+                $('#tabs').tabs('add',{
+                    title:title,
+                    content:content,
+                    closable:true
+                });
+            }
+        }
+
+        $(function(){
+            $("[id^='easy_menu']").each(function () {
+                $(this).tree({
+                    onClick: function(node){
+                        //alert(node.text+'-'+node.attributes.url);  // alert node text property when clicked
+                        addTab(node.text, node.attributes.url);
+                    }
+                });
+            })
+
+        });
+
+    </script>
+
+</head>
+<body class="easyui-layout">
+    <div id="header" data-options="region:'north',border:false" style="height:60px; padding:10px">
+
+        <img src="img/logo.png" class="logo" />
+        <div class="top-btns">
+            <span>欢迎您，管理员</span>
+            <a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-lock'">修改密码</a>
+            <a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-clear'">退出系统</a>
+            <select class="easyui-combobox" data-options="editable:false">
+                <option value="0" selected="selected">中文</option>
+                <option value="1">English</option>
+            </select>
+            <a href="#" class="easyui-menubutton" menu="#mm2" iconCls="icon-help">Help</a>
+            <a href="#" class="easyui-menubutton" menu="#mm1" iconCls="icon-edit">Edit</a>
+
+            <div id="mm1" style="width:150px;">
+                <div iconCls="icon-undo">Undo</div>
+                <div iconCls="icon-redo">Redo</div>
+                <div class="menu-sep"></div>
+                <div>Cut</div>
+                <div>Copy</div>
+                <div>Paste</div>
+                <div class="menu-sep"></div>
+                <div iconCls="icon-remove">Delete</div>
+                <div>Select All</div>
+            </div>
+            <div id="mm2" style="width:100px;">
+                <div onclick="changeTheme('default')">默认主题</div>
+                <div onclick="changeTheme('black')">黑色主题</div>
+                <div onclick="changeTheme('bootstrap')">Bootstrap主题</div>
+                <div onclick="changeTheme('gray')">灰色主题</div>
+                <div onclick="changeTheme('metro')">Win8</div>
+                <div onclick="changeTheme('material')">material</div>
+                <div onclick="changeTheme('material-teal')">material-teal</div>
+
+            </div>
+        </div>
+
+	</div>
+    <div data-options="region:'west',split:true,title:'主菜单'"  style="width:200px;">
+        <div class="easyui-accordion" style="height: 100%">
+            <div title="个人中心"  data-options="iconCls:'icon-ok'" style="overflow:auto;">
+
+                <ul id="easy_menu_1" class="easyui-tree">
+                    <li >
+                        <span onclick="addTab('baidu','https://www.baidu.com/')">Friend</span>
+                    </li>
+                    <li  >
+                        <span data-options="url:'get_data.php'"><a href="https://www.baidu.com/">百度</a></span>
+
+                    </li>
+                    <li data-options="attributes:{'url':'https://www.baidu.com/'}">
+                        <span>Company</span>
+                    </li>
+                    <li>
+                        <span>My Documents</span>
+                        <ul>
+                            <li data-options="state:'closed'">
+                                <span>Photos</span>
+                                <ul>
+                                    <li>
+                                        <span>Friend</span>
+                                    </li>
+                                    <li>
+                                        <span>Wife</span>
+                                    </li>
+                                    <li>
+                                        <span>Company</span>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+            </div>
+
+            <!--/*@thymesVar id="nemuList" type="com.hyc.oa.common.utils.TreeNode"*/-->
+			 <th:block th:each="m : ${nemuList}">
+
+                 <div th:title="${m.text}"   style="padding:10px">
+                     <ul class="easyui-tree"   >
+
+                     </ul>
+                 </div>
+			  </th:block>
+
+
+            <div title="系统设置" data-options="iconCls:'icon-help'" style="padding:10px;">
+
+
+                    <ul id="easy_menu_2" class="easyui-tree">
+                        <li data-options="attributes:{'url':'system/menu/list.html'}">
+                            <span >菜单管理</span>
+                        </li>
+                        <li data-options="attributes:{'url':'http://xinyue.qq.com/?ADTAG=act.top.nav.home'}">
+                            <span >百度</span>
+
+                        </li>
+                        <li data-options="attributes:{'url':'https://www.baidu.com/'}">
+                            <span>百度</span>
+                        </li>
+
+                    </ul>
+
+
+            </div>
+            <div title="Ajax" data-options="href:'_content.html'" style="padding:10px">
+            </div>
+        </div>
+
+    </div>
+    <div  data-options="region:'center',title:'',tools:'#tab-tools'">
+        <div id="tabs" class="easyui-tabs" style="width: 100%;height: 100%">
+            <div title="待办事项" style="padding:10px;">
+
+            </div>
+            <div title="Ajax" data-options="href:'https://www.baidu.com/',closable:true" style="padding:10px"></div>
+            <div title="Iframe" data-options="closable:true" style="overflow:hidden">
+                <iframe scrolling="yes" frameborder="0"  src="http://www.jeasyui.com/forum/index.php" style="width:100%;height:100%;"></iframe>
+            </div>
+        </div>
+    </div>
+    <div data-options="region:'south'" style="height:50px; padding:10px;">south region</div>
+
+</body>
+
+</html>
