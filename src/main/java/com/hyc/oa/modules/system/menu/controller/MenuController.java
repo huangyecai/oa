@@ -1,63 +1,56 @@
 package com.hyc.oa.modules.system.menu.controller;
 
-import com.hyc.oa.common.utils.TreeNode;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
+import com.hyc.oa.modules.system.menu.entity.Menu;
+import com.hyc.oa.modules.system.menu.service.MenuService;
 
 @Controller
 public class MenuController {
+    private static final String COMMON = "menu/";
     private static final String LITS = "menu/list";
+    private static final String CREATE = COMMON+"create";
+    private static final String UPDATE = COMMON+"update";
+    private static final String FORM = COMMON+"form";
+    
+    @Autowired
+    private MenuService menuService;
+    
+    @RequestMapping(FORM)
+    public void form(Menu entity,HttpServletRequest request) throws Exception {
+		if (StringUtils.isNotBlank(entity.getId())) {
+			entity = menuService.get(entity.getId());
+			if (entity == null ) {
+				throw new Exception("数据不存在");
+			}
+		}
+		request.setAttribute("entity", entity);
+	}
 
+    @RequestMapping(CREATE)
+    public String create(Menu entity,HttpServletRequest request) {
+    	menuService.save(entity);
+    	return LITS;
+	}
+    
+    @RequestMapping(UPDATE)
+    public String update(Menu entity,HttpServletRequest request) {
+    	menuService.save(entity);
+    	return LITS;
+    }
+    
     @RequestMapping(LITS)
     @ResponseBody
-    public List<TreeNode> list(HttpServletRequest request){
-        TreeNode rootNode = new TreeNode();
-        rootNode.setId(1);
-        rootNode.setText("系统管理");
-        rootNode.setUrl("");
-        rootNode.setCode("XTGL");
-        rootNode.setState("open");
-
-        TreeNode node1 = new TreeNode();
-        node1.setId(1);
-        node1.setText("系统管理");
-        node1.setUrl("");
-        node1.setCode("XTGL");
-        node1.setState("open");
-
-        TreeNode node2 = new TreeNode();
-        node2.setId(1);
-        node2.setText("系统管理");
-        node2.setUrl("");
-        node2.setCode("XTGL");
-        node2.setState("open");
-
-        TreeNode node3 = new TreeNode();
-        node3.setId(1);
-        node3.setText("系统管理");
-        node3.setUrl("");
-        node3.setCode("XTGL");
-        node3.setState("open");
-
-        List<TreeNode> nodelist = new ArrayList<>();
-        nodelist.add(node3);
-
-        node2.setChildren(nodelist);
-
-       nodelist = new ArrayList<>();
-        nodelist.add(node2);
-        nodelist.add(node1);
-
-        rootNode.setChildren(nodelist);
-
-        nodelist = new ArrayList<>();
-        nodelist.add(rootNode);
-        return nodelist;
+    public List<Menu> list(Menu entity,HttpServletRequest request){
+    	return menuService.list(entity);
     }
 
     @RequestMapping("system/menu/menuTree")

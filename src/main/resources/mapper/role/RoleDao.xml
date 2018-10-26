@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hyc.oa.modules.role.dao.RoleDao">
+  <resultMap id="BaseResultMap" type="com.hyc.oa.modules.role.entity.Role">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="level" jdbcType="INTEGER" property="level" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="sort_num" jdbcType="INTEGER" property="sortNum" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, description, code, level, type, sort_num, status, remark, create_date, 
+    create_by, update_date, update_by
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from role
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from role
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.hyc.oa.modules.role.entity.Role">
+    insert into role (id, name, description, 
+      code, level, type, 
+      sort_num, status, remark, 
+      create_date, create_by, update_date, 
+      update_by)
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
+      #{code,jdbcType=VARCHAR}, #{level,jdbcType=INTEGER}, #{type,jdbcType=VARCHAR}, 
+      #{sortNum,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, 
+      #{updateBy,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyc.oa.modules.role.entity.Role">
+    insert into role
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+      <if test="code != null">
+        code,
+      </if>
+      <if test="level != null">
+        level,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="sortNum != null">
+        sort_num,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="createBy != null">
+        create_by,
+      </if>
+      <if test="updateDate != null">
+        update_date,
+      </if>
+      <if test="updateBy != null">
+        update_by,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null">
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null">
+        #{level,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="sortNum != null">
+        #{sortNum,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null">
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null">
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null">
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyc.oa.modules.role.entity.Role">
+    update role
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null">
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null">
+        level = #{level,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="sortNum != null">
+        sort_num = #{sortNum,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null">
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null">
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null">
+        update_by = #{updateBy,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyc.oa.modules.role.entity.Role">
+    update role
+    set name = #{name,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      level = #{level,jdbcType=INTEGER},
+      type = #{type,jdbcType=VARCHAR},
+      sort_num = #{sortNum,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

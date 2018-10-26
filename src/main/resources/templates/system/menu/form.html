@@ -13,27 +13,8 @@
     <script type="text/javascript" src="../../../static/jquery-easyui-1.6.6/jquery.min.js"></script>
     <script type="text/javascript" src="../../../static/jquery-easyui-1.6.6/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="../../../static/jquery-easyui-1.6.6/jquery.cookie.js"></script>
-</head>
-<body>
-<div class="easyui-panel" title="Register" style="width:100%;max-width:400px;padding:30px 60px;">
-		<div style="margin-bottom:20px">
-			<label for="username" class="label-top">User Name:</label>
-			<input id="username" class="easyui-validatebox tb" data-options="required:true,validType:'length[3,10]',validateOnCreate:true,missingMessage:'asd',invalidMessage:'ddd',err:err">
-		</div>
-		<div style="margin-bottom:20px">
-			<label for="email" class="label-top">Email:</label>
-			<input id="email" class="easyui-validatebox tb" data-options="required:true,validType:'email',validateOnCreate:false,err:err">
-		</div>
-		<div style="margin-bottom:20px">
-			<label for="url" class="label-top">Url:</label>
-			<input id="url" class="easyui-validatebox tb" data-options="required:true,validType:'url',validateOnCreate:false,err:err">
-		</div>
-		<div style="margin-bottom:20px">
-			<label for="phone" class="label-top">Phone:</label>
-			<input id="phone" class="easyui-validatebox tb" data-options="required:true,validateOnCreate:false,err:err">
-		</div>
-	</div>
-	<style scoped="scoped">
+    
+    <style scoped="scoped">
 		.tb{
 			width:100%;
 			margin:0;
@@ -60,6 +41,26 @@
 			m.html(message);
 		}
 	</script>
+</head>
+<body>
+<div class="easyui-panel" title="Register" style="width:100%;max-width:400px;padding:30px 60px;">
+		<div style="margin-bottom:20px">
+			<label for="username" class="label-top">User Name:</label>
+			<input id="username" class="easyui-validatebox tb" data-options="required:true,validType:'length[3,10]',validateOnCreate:true,missingMessage:'asd',invalidMessage:'ddd',err:err">
+		</div>
+		<div style="margin-bottom:20px">
+			<label for="email" class="label-top">Email:</label>
+			<input id="email" class="easyui-validatebox tb" data-options="required:true,validType:'email',validateOnCreate:false,err:err">
+		</div>
+		<div style="margin-bottom:20px">
+			<label for="url" class="label-top">Url:</label>
+			<input id="url" class="easyui-validatebox tb" data-options="required:true,validType:'url',validateOnCreate:false,err:err">
+		</div>
+		<div style="margin-bottom:20px">
+			<label for="phone" class="label-top">Phone:</label>
+			<input id="phone" class="easyui-validatebox tb" data-options="required:true,validateOnCreate:false,err:err">
+		</div>
+	</div>
   
 <div class="easyui-panel" title="New Topic" style="width:400px">
 		<div style="padding:10px 60px 20px 60px">

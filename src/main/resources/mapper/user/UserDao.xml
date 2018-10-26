@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hyc.oa.modules.user.dao.UserDao">
+
+	<sql id="dateList">
+		id,
+		family_name AS "familyName",
+		first_name AS "firstName",
+		full_name AS "name",
+		enterprise_id AS "enterpriseId",
+		organization_id AS
+		"organizationId",
+		mobile,
+		photo,
+		sex,
+		email,
+		weixin,
+		qq,
+		office_address AS
+		"officeAddress",
+		job,
+		job_number AS "jobNumber",
+		education,
+		school,
+		major,
+		graduation_date AS "graduationDate",
+		natives,
+		nation,
+		identity,
+		passport,
+		social,
+		bank_account AS "bankAccount",
+		birthday,
+		marriage,
+		address,
+		emergency_contact AS "emergencyContact",
+		emergency_phone AS
+		"emergencyPhone",
+		tel_phone AS "telPhone",
+		create_by AS "createBy",
+		create_date AS "createDate",
+		update_by AS "updateBy",
+		update_date AS
+		"updateDate",
+		is_upload AS "isUpload"
+
+	</sql>
+
+
+	<select id="getById" resultType="com.hyc.oa.modules.user.entity.User">
+		SELECT
+		*
+		FROM sys_userinfo a
+
+		WHERE
+		a.id = #{id}
+	</select>
+	<insert id="insertInfo">
+		insert into sys_userinfo (id, family_name,
+		first_name,
+		full_name, enterprise_id, organization_id,
+		mobile, photo,
+		sex, email, weixin,
+		qq, office_address, job,
+		job_number, education,
+		school,
+		major, graduation_date, natives,
+		nation, identity, passport,
+		social, bank_account, birthday,
+		marriage, address, emergency_contact,
+		emergency_phone, tel_phone, create_by,
+		create_date, update_by,
+		update_date,
+		is_upload, link_list
+		)
+		values
+		(#{id,jdbcType=VARCHAR}, #{familyName,jdbcType=VARCHAR},
+		#{firstName,jdbcType=VARCHAR},
+		#{name,jdbcType=VARCHAR},
+		#{enterpriseId,jdbcType=VARCHAR}, #{organizationId,jdbcType=VARCHAR},
+		#{mobile,jdbcType=VARCHAR}, #{photo,jdbcType=VARCHAR},
+		#{sex,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR},
+		#{weixin,jdbcType=VARCHAR},
+		#{qq,jdbcType=VARCHAR},
+		#{officeAddress,jdbcType=VARCHAR}, #{job,jdbcType=VARCHAR},
+		#{jobNumber,jdbcType=VARCHAR}, #{education,jdbcType=VARCHAR},
+		#{school,jdbcType=VARCHAR},
+		#{major,jdbcType=VARCHAR},
+		#{graduationDate,jdbcType=VARCHAR}, #{natives,jdbcType=VARCHAR},
+		#{nation,jdbcType=VARCHAR}, #{identity,jdbcType=VARCHAR},
+		#{passport,jdbcType=VARCHAR},
+		#{social,jdbcType=VARCHAR},
+		#{bankAccount,jdbcType=VARCHAR}, #{birthday,jdbcType=VARCHAR},
+		#{marriage,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR},
+		#{emergencyContact,jdbcType=VARCHAR},
+		#{emergencyPhone,jdbcType=VARCHAR}, #{telPhone,jdbcType=VARCHAR},
+		#{createBy,jdbcType=VARCHAR},
+		#{createDate,jdbcType=TIMESTAMP},
+		#{updateBy,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP},
+		#{isUpload,jdbcType=TINYINT}, #{isDelete,jdbcType=TINYINT},
+		#{linkList,jdbcType=LONGVARCHAR}
+		)
+	</insert>
+
+	<select id="getByMobile" resultType="com.hyc.oa.modules.user.entity.User">
+		select 
+		<include refid="dateList" />
+		from sys_userinfo
+		where mobile=#{mobile}
+	</select>
+
+	<select id="list" resultType="com.hyc.oa.modules.user.entity.User">
+		select
+		<include refid="dateList" />
+		from sys_userinfo
+
+	</select>
+</mapper>
