@@ -17,17 +17,15 @@ import com.hyc.oa.modules.system.menu.entity.Menu;
  */
 @Mapper
 public interface MenuDao {
-	int deleteByPrimaryKey(String id);
+	int delete(String id);
 
 	int insert(Menu entity);
 
 	int insertSelective(Menu entity);
 
-	Menu selectByPrimaryKey(String id);
+	Menu getById(String id);
 
-	int updateByPrimaryKeySelective(Menu entity);
-
-	int updateByPrimaryKey(Menu entity);
+	int update(Menu entity);
 	
 	public List<Menu> list(Menu entity);
 }

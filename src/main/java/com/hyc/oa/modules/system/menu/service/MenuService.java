@@ -48,7 +48,7 @@ public class MenuService {
 	 * @param entity
 	 * @return
 	 */
-	public String create(Menu entity) {
+	private String create(Menu entity) {
 		entity.preInsert();
 		menuDao.insert( entity );
 		return entity.getId();
@@ -59,9 +59,9 @@ public class MenuService {
 	 * @param entity
 	 * @return
 	 */
-	public String update(Menu entity) {
+	private String update(Menu entity) {
 		entity.preUpdate();
-		menuDao.updateByPrimaryKey( entity );
+		menuDao.update( entity );
 		return entity.getId();
 	}
 	
@@ -71,7 +71,7 @@ public class MenuService {
 	 * @return
 	 */
 	public Menu get(String id) {
-		return menuDao.selectByPrimaryKey(id);
+		return menuDao.getById(id);
 	}
 	
 	public List<Menu> list(Menu entity) {

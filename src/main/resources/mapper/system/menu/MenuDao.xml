@@ -1,35 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hyc.oa.modules.system.menu.dao.MenuDao">
-	<select id="getById"
-		resultType="com.hyc.oa.modules.system.menu.entity.Menu">
+	<sql id="dateList">
+		id,
+		name,
+		description,
+		url,
+		parent_id as "parentId",
+		code,
+		sort_num as "sortNum",
+		remarks,
+		status,
+		create_by AS "createBy.id",
+		create_date AS "createDate",
+		update_by AS "updateBy.id",
+		update_date AS "updateDate"
+	</sql>
+	<select id="getById" resultType="com.hyc.oa.modules.system.menu.entity.Menu">
 		SELECT
-		*
-		FROM nemu r
+		<include refid="dateList" />
+		FROM menu m
 		WHERE
-		r.id = #{id}
+		m.id = #{id}
 	</select>
-	<select id="list"
-		resultType="com.hyc.oa.modules.system.menu.entity.Menu">
+	<select id="list" resultType="com.hyc.oa.modules.system.menu.entity.Menu">
 		SELECT
-		*
+		<include refid="dateList" />
 		FROM menu  
+		<where>
+			<if test="name!=null and name!=''">
+			    and name LIKE '%' #{name} '%'
+			</if>
+			<if test="description!=null and description!=''">
+			    and description LIKE '%' #{description} '%'
+			</if>
+			<if test="url!=null and url!=''">
+			    and url LIKE '%' #{url} '%'
+			</if>
+			<if test="code!=null and code!=''">
+			    and code LIKE '%' #{code} '%'
+			</if>
+		</where>
 	</select>
 	<insert id="insert" parameterType="com.hyc.oa.modules.system.menu.entity.Menu">
-		insert into menu (id, name, description,
-		url, parent_id,
+		insert into menu (
+		id, 
+		name, 
+		description,
+		url, 
+		parent_id,
 		code,
-		sort_num, status, remark,
-		create_date, create_by, update_date,
+		sort_num, 
+		status, 
+		remarks,
+		create_date, 
+		create_by, 
+		update_date,
 		update_by)
-		values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
+		values (#{id,jdbcType=VARCHAR},
+		#{name,jdbcType=VARCHAR},
 		#{description,jdbcType=VARCHAR},
 		#{url,jdbcType=VARCHAR},
-		#{parentId,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR},
-		#{sortNum,jdbcType=INTEGER}, #{status,jdbcType=INTEGER},
-		#{remark,jdbcType=VARCHAR},
+		#{parentId,jdbcType=VARCHAR}, 
+		#{code,jdbcType=VARCHAR},
+		#{sortNum,jdbcType=INTEGER}, 
+		#{status,jdbcType=INTEGER},
+		#{remarks,jdbcType=VARCHAR},
 		#{createDate,jdbcType=TIMESTAMP},
-		#{createBy.id,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP},
+		#{createBy.id,jdbcType=VARCHAR}, 
+		#{updateDate,jdbcType=TIMESTAMP},
 		#{updateBy.id,jdbcType=VARCHAR})
 	</insert>
 	<update id="update" parameterType="com.hyc.oa.modules.system.menu.entity.Menu">
@@ -56,8 +95,8 @@
 			<if test="status != null">
 				status = #{status,jdbcType=INTEGER},
 			</if>
-			<if test="remark != null">
-				remark = #{remark,jdbcType=VARCHAR},
+			<if test="remarks != null">
+				remarks = #{remarks,jdbcType=VARCHAR},
 			</if>
 			<if test="createDate != null">
 				create_date = #{createDate,jdbcType=TIMESTAMP},

@@ -8,16 +8,14 @@
 		first_name AS "firstName",
 		full_name AS "name",
 		enterprise_id AS "enterpriseId",
-		organization_id AS
-		"organizationId",
+		organization_id AS	"organizationId",
 		mobile,
 		photo,
 		sex,
 		email,
 		weixin,
 		qq,
-		office_address AS
-		"officeAddress",
+		office_address AS "officeAddress",
 		job,
 		job_number AS "jobNumber",
 		education,
@@ -34,14 +32,12 @@
 		marriage,
 		address,
 		emergency_contact AS "emergencyContact",
-		emergency_phone AS
-		"emergencyPhone",
+		emergency_phone AS "emergencyPhone",
 		tel_phone AS "telPhone",
-		create_by AS "createBy",
+		create_by AS "createBy.id",
 		create_date AS "createDate",
-		update_by AS "updateBy",
-		update_date AS
-		"updateDate",
+		update_by AS "updateBy.id",
+		update_date AS "updateDate",
 		is_upload AS "isUpload"
 
 	</sql>
@@ -49,7 +45,7 @@
 
 	<select id="getById" resultType="com.hyc.oa.modules.user.entity.User">
 		SELECT
-		*
+		<include refid="dateList" />
 		FROM sys_userinfo a
 
 		WHERE
@@ -94,9 +90,9 @@
 		#{marriage,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR},
 		#{emergencyContact,jdbcType=VARCHAR},
 		#{emergencyPhone,jdbcType=VARCHAR}, #{telPhone,jdbcType=VARCHAR},
-		#{createBy,jdbcType=VARCHAR},
+		#{createBy.id,jdbcType=VARCHAR},
 		#{createDate,jdbcType=TIMESTAMP},
-		#{updateBy,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP},
+		#{updateBy.id,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP},
 		#{isUpload,jdbcType=TINYINT}, #{isDelete,jdbcType=TINYINT},
 		#{linkList,jdbcType=LONGVARCHAR}
 		)
