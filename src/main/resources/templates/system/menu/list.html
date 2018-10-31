@@ -16,11 +16,12 @@
 		function selectPage(pageNumber, pageSize){
 			/* alert('pageNumber:'+pageNumber+',pageSize:'+pageSize);
 			alert(window.location.pathname); */
-			window.location.href=window.location.pathname+'?pageNumber='+pageNumber+'&pageSize='+pageSize;
+			window.location.href=window.location.pathname+'?pageNumber='+pageNumber+'&pageSize='+pageSize+'&'+$("form").serialize();
 		}
 		function openDialog(title,id) {
 			$('#dd').dialog({
 			    title: title,
+			    modal:true
 			});
 			var url = 'form'
 			if (id != null && id != "") {
@@ -28,59 +29,115 @@
 			}
 			$('#dd').dialog('refresh', url);
 			$('#dd').dialog('open');
+			$("#dd").panel("move",{top:$(document).scrollTop() + ($(window).height()* 0.5) -200});//位置设置
+		}
+		function deleteMenu(id) {
+			var url = 'delete'
+			if (id != null && id != "") {
+				url += '?id='+id;
+			}else
+			{
+				$.messager.alert('操作提示','请选择数据！','error');
+				return ;
+			}
+			
+			$.messager.confirm('删除提示', '你确定要删除该项吗?', function(r){
+				if (r){
+					$.ajax({
+						url:url,
+						type:"POST",
+						dataType:"json",
+						success: function(data){
+							/*console.log(data);
+							 var result = $.parseJSON(data); 
+							console.log(result.status); */
+							if (data.status == 200 || data.status == "200") {
+								$.messager.alert('删除结果','删除成功！','warning',function(){window.location.reload();});
+							}else{
+								$.messager.alert('删除结果','删除失败！','error');
+							}
+							
+						},
+					    error:function(){
+					    	$.messager.alert('删除结果','删除失败！','error');
+					    }
+					});
+				}
+			});
+		}
+		function detail(id) {
+			$('#dd').dialog({
+			    title: '菜单详情',
+			    modal:true
+			});
+			var url = 'detail'
+			if (id != null && id != "") {
+				url += '?id='+id;
+			}else{
+				$.messager.alert('操作提示','请选择数据！','error');
+				return ;
+			}
+			$('#dd').dialog('refresh', url);
+			$('#dd').dialog('open');
+			$("#dd").panel("move",{top:$(document).scrollTop() + ($(window).height()* 0.5) -250});
+		}
+		function closeDetail() {
+	    	$('#dd').dialog('close');
 		}
 	</script>
 </head>
 <body>
-	<div id="tb" style="padding:5px;height:auto">
-		<div style="margin-bottom:5px">
-			<a href="javascript:void(0);" onclick="openDialog('添加菜单','')" class="easyui-linkbutton" iconCls="icon-add" plain="true"></a>
-			<a href="#"  class="easyui-linkbutton" iconCls="icon-edit" plain="true"></a>
-			<a href="#" class="easyui-linkbutton" iconCls="icon-save" plain="true"></a>
-			<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true"></a>
-			<a href="#" onclick="$('#dd').dialog('close');" class="easyui-linkbutton" iconCls="icon-remove" plain="true"></a>
+	<div class="easyui-panel"   style="width:100%;height: auto;">
+		<div id="tb" style="padding:5px;height:auto">
+			<div style="margin-bottom:5px">
+				<a href="javascript:void(0);" onclick="openDialog('添加菜单','')" class="easyui-linkbutton" iconCls="icon-add" plain="true"></a>
+				<a href="#"  class="easyui-linkbutton" iconCls="icon-edit" plain="true"></a>
+				<a href="#" class="easyui-linkbutton" iconCls="icon-save" plain="true"></a>
+				<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true"></a>
+				<a href="#" onclick="$('#dd').dialog('close');" class="easyui-linkbutton" iconCls="icon-remove" plain="true"></a>
+			</div>
+			<div>
+				<form id="searchForm" action="list" method="post">
+					名称：<input name="name" th:value="${param.name}" class="easyui-textbox" style="width:100px;height:32px">
+					说明：<input name="description" th:value="${param.description}" class="easyui-textbox" style="width:100px;height:32px">
+					url：<input name="url" th:value="${param.url}" class="easyui-textbox" style="width:100px;height:32px">
+					编码：<input name="code" th:value="${param.code}" class="easyui-textbox" style="width:100px;height:32px">
+					<a href="#" class="easyui-linkbutton" onclick="$('#searchForm').submit();" iconCls="icon-search">Search</a>
+				</form>
+			</div>
 		</div>
-		<div>
-			<form id="searchForm" action="list" method="post">
-				名称：<input name="name" th:value="${param.name}" class="easyui-textbox" style="width:100px;height:32px">
-				说明：<input name="description" th:value="${param.description}" class="easyui-textbox" style="width:100px;height:32px">
-				url：<input name="url" th:value="${param.url}" class="easyui-textbox" style="width:100px;height:32px">
-				编码：<input name="code" th:value="${param.code}" class="easyui-textbox" style="width:100px;height:32px">
-				<a href="#" class="easyui-linkbutton" onclick="$('#searchForm').submit();" iconCls="icon-search">Search</a>
-			</form>
+	    <table id="tt" title="菜单管理" class="easyui-datagrid" style="width:100%;height:auto;" singleSelect="true" rownumbers="true" toolbar='#tb'>
+		<thead>
+			<tr>
+				<th field="name" style="min-width: 100px;width: auto;">名称</th>
+				<th field="description" style="min-width: 100px;width: auto;">说明</th>
+				<th field="url" style="min-width: 100px;width: auto;">url</th>
+				<th field="code" width="100">编码</th>
+				<th field="sortNum" width="100">排序</th>
+				<th field="name7" width="200">操作</th>
+			</tr>                          
+		</thead>                           
+			<tbody>   
+				<th:block th:each="menu:${page.result}">
+					<tr>                           
+						<td th:text="${menu.name}"></td>            
+						<td th:text="${menu.description}"></td>            
+						<td th:text="${menu.url}"></td>            
+						<td th:text="${menu.code}"></td>            
+						<td th:text="${menu.sortNum}"></td>            
+						<td >
+							<a href="#" class="easyui-linkbutton" th:onclick="'openDialog(\'编辑菜单\',\''+${ menu.id}+'\')'">编辑</a>
+							<a href="#" class="easyui-linkbutton" th:onclick="'javascript:deleteMenu(\''+${ menu.id}+'\')'">删除</a>
+							<a href="#" class="easyui-linkbutton" th:onclick="'javascript:detail(\''+${ menu.id}+'\')'">详情</a>
+						</td>            
+					</tr> 
+				</th:block>                       
+			</tbody>                           
+		</table>
+		<div class="easyui-pagination" style="border:1px solid #ccc;" th:attr="data-options='pageNumber:'+${page.pageNum}+',total:'+${page.total}+',pageSize:'+${page.pageSize}+',onSelectPage:selectPage'">
+		</div>
+		<div id="dd" title="add" class="easyui-dialog"  style="height:auto; width:415px; text-align:center"
+		            data-options="resizable:true,modal:false,closed:true"  >
 		</div>
 	</div>
-    <table id="tt" title="菜单管理" class="easyui-datagrid" style="width:100%;height:auto;" singleSelect="true" rownumbers="true" toolbar='#tb'>
-	<thead>
-		<tr>
-			<th field="name" style="min-width: 100px;width: auto;">名称</th>
-			<th field="description" style="min-width: 100px;width: auto;">说明</th>
-			<th field="url" style="min-width: 100px;width: auto;">url</th>
-			<th field="code" width="100">编码</th>
-			<th field="sortNum" width="100">排序</th>
-			<th field="name7" width="200">操作</th>
-		</tr>                          
-	</thead>                           
-	<tbody>   
-		<th:block th:each="menu:${page.result}">
-			<tr>                           
-				<td th:text="${menu.name}"></td>            
-				<td th:text="${menu.description}"></td>            
-				<td th:text="${menu.url}"></td>            
-				<td th:text="${menu.code}"></td>            
-				<td th:text="${menu.sortNum}"></td>            
-				<td >
-					<a href="#" class="easyui-linkbutton" th:onclick="'openDialog(\'编辑菜单\',\''+${ menu.id}+'\')'">编辑</a>
-					<a href="#" class="easyui-linkbutton" th:onclick="'javascript:check(2)'">删除</a>
-					<a href="#" class="easyui-linkbutton" th:onclick="'javascript:check(2)'">详情</a>
-				</td>            
-			</tr> 
-		</th:block>                       
-	</tbody>                           
-</table>
-<div class="easyui-pagination" style="border:1px solid #ccc;" th:attr="data-options='pageNumber:'+${page.pageNum}+',total:'+${page.total}+',pageSize:'+${page.pageSize}+',onSelectPage:selectPage'">
-</div>
-<div id="dd" title="add" class="easyui-dialog"  style="height:auto; width:415px; text-align:center"
-            data-options="resizable:true,modal:false,closed:true"  >
-</div>
 </html>

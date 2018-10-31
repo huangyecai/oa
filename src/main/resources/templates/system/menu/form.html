@@ -38,24 +38,6 @@
 	</script>
 </head>
 <body>
-<!-- <div class="easyui-panel" title="Register" style="width:100%;max-width:400px;padding:30px 60px;">
-		<div style="margin-bottom:20px">
-			<label for="username" class="label-top">User Name:</label>
-			<input id="username" class="easyui-validatebox tb" data-options="required:true,validType:'length[3,10]',validateOnCreate:true,missingMessage:'asd',invalidMessage:'ddd',err:err">
-		</div>
-		<div style="margin-bottom:20px">
-			<label for="email" class="label-top">Email:</label>
-			<input id="email" class="easyui-validatebox tb" data-options="required:true,validType:'email',validateOnCreate:false,err:err">
-		</div>
-		<div style="margin-bottom:20px">
-			<label for="url" class="label-top">Url:</label>
-			<input id="url" class="easyui-validatebox tb" data-options="required:true,validType:'url',validateOnCreate:false,err:err">
-		</div>
-		<div style="margin-bottom:20px">
-			<label for="phone" class="label-top">Phone:</label>
-			<input id="phone" class="easyui-validatebox tb" data-options="required:true,validateOnCreate:false,err:err">
-		</div>
-	</div> -->
   
 <div class="easyui-panel"   style="width:400px">
 		<div style="padding:10px 60px 20px 60px">
@@ -101,7 +83,7 @@
 	</div>
 	<script>
 		function closeDialog1() {
-			top.closeDialog();
+			closeDialog();
 		}
 		function submitForm(){
 			  $('#mainForm').form('submit',{
@@ -111,10 +93,14 @@
 				success:function(data){
 					var result = $.parseJSON(data); 
 					if (result.status == 200 || result.status == "200") {
-						alert("操作成功");
-						top.closeDialog();
+						/* alert("操作成功");
+						top.closeDialog(); */
+						$.messager.alert("操作提示", "操作成功！", "warning", function () {
+							closeDialog();
+				        });
 					}else{
-						alert("操作失败");
+						/* alert("操作失败"); */
+						$.messager.alert('警告','操作失败!','error');
 					}
 			    }
 			}); 

@@ -18,6 +18,8 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.hyc.oa.modules.system.menu.entity.Menu;
 import com.hyc.oa.modules.system.menu.service.MenuService;
+import com.hyc.oa.modules.user.entity.User;
+import com.hyc.oa.modules.user.service.UserService;
 
 @Controller
 public class MenuController {
@@ -27,9 +29,13 @@ public class MenuController {
     private static final String CREATE = COMMON+"create";
     private static final String UPDATE = COMMON+"update";
     private static final String FORM = COMMON+"form";
+    private static final String DELETE = COMMON+"delete";
+    private static final String DETAIL = COMMON+"detail";
     
     @Autowired
     private MenuService menuService;
+    /** 用户service**/
+    private UserService userService;
     
     @RequestMapping(FORM)
     public void form(Menu entity,HttpServletRequest request) throws Exception {
@@ -41,6 +47,36 @@ public class MenuController {
 		}
 		request.setAttribute("entity", entity);
 	}
+    
+    @RequestMapping(DETAIL)
+    public void detail(Menu entity,HttpServletRequest request) throws Exception {
+    	if (StringUtils.isNotBlank(entity.getId())) {
+    		entity = menuService.get(entity.getId());
+    		if (entity == null ) {
+    			throw new Exception("数据不存在");
+    		}
+    		
+    		if ( StringUtils.isNotBlank(entity.getParentId()) && !"0".equals(entity.getParentId())) {
+    			Menu parent = menuService.get(entity.getParentId());
+    			if (parent != null) {
+    				entity.setParent(parent);
+				}
+			}
+    		if (entity.getCreateBy() != null && StringUtils.isNotBlank(entity.getCreateBy().getId())) {
+    			User createBy = userService.getById(entity.getCreateBy().getId());
+    			if (createBy != null) {
+    				entity.setCreateBy(createBy);
+    			}
+    		}
+    		if (entity.getUpdateBy() != null && StringUtils.isNotBlank(entity.getUpdateBy().getId())) {
+    			User updateBy = userService.getById(entity.getUpdateBy().getId());
+    			if (updateBy != null) {
+    				entity.setUpdateBy(updateBy);
+    			}
+    		}
+    	}
+    	request.setAttribute("entity", entity);
+    }
 
     @RequestMapping(CREATE)
     @ResponseBody
@@ -50,7 +86,7 @@ public class MenuController {
     		menuService.save(entity);
 		} catch (Exception e) {
 			map.put("status", 500);
-	    	map.put("message", "success");
+	    	map.put("message", e);
 	    	map.put("date", "");
 	    	return map;
 		}
@@ -68,13 +104,39 @@ public class MenuController {
     		menuService.save(entity);
 		} catch (Exception e) {
 			map.put("status", 500);
-	    	map.put("message", "success");
+	    	map.put("message", e);
 	    	map.put("date", "");
 	    	return map;
 		}
     	map.put("status", 200);
     	map.put("message", "success");
     	map.put("date", "");
+    	return map;
+    }
+    
+    @RequestMapping(DELETE)
+    @ResponseBody
+    public Map<String, Object> delete(Menu entity,HttpServletRequest request) {
+    	Map<String, Object> map =new HashMap<>();
+    	boolean result = false;
+    	try {
+    		result = menuService.delete(entity.getId());
+    	} catch (Exception e) {
+    		map.put("status", 500);
+    		map.put("message", e);
+    		map.put("date", "");
+    		return map;
+    	}
+    	if (result) {
+    		map.put("status", 200);
+        	map.put("message", "success");
+        	map.put("date", "");
+		}else {
+			map.put("status", 500);
+	    	map.put("message", "error");
+	    	map.put("date", "");
+		}
+    	
     	return map;
     }
     

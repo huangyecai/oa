@@ -114,7 +114,7 @@
 		where id = #{id,jdbcType=VARCHAR}
 	</update>
 	<delete id="delete" parameterType="java.lang.String">
-		delete from role
+		delete from menu
 		where id =
 		#{id,jdbcType=VARCHAR}
 	</delete>

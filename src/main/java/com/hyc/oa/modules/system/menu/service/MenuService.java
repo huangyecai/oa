@@ -77,4 +77,19 @@ public class MenuService {
 	public List<Menu> list(Menu entity) {
 		return menuDao.list(entity);
 	}
+	
+	/**
+	 * 删除菜单
+	 * @param id
+	 * @return
+	 */
+	@Transactional
+	public boolean delete(String id) {
+		if (get(id) != null) {
+			menuDao.delete(id);
+			return true;
+		}else {
+			return false;
+		}
+	}
 }

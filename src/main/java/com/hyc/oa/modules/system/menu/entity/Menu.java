@@ -24,6 +24,8 @@ public class Menu extends BaseEntity<Menu>{
 	private String code;
 
 	private Integer sortNum;
+	
+	private transient Menu parent;
 
 	public String getName() {
 		return name;
@@ -71,6 +73,14 @@ public class Menu extends BaseEntity<Menu>{
 
 	public void setSortNum(Integer sortNum) {
 		this.sortNum = sortNum;
+	}
+
+	public Menu getParent() {
+		return parent;
+	}
+
+	public void setParent(Menu parent) {
+		this.parent = parent;
 	}
 
 
