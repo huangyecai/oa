@@ -15,73 +15,78 @@
         #header .top-btns span {vertical-align:middle;}
         #header .top-btns .easyui-combobox {width:80px;}
     </style>
-	<script  type="text/javascript" >
-	    /**
-         * easyUI更换主题的方法
-         * @param {Object} themeName 主题的名称
-         * @author ZHENGWEI
-         * @date 2015-5-16
-         */
-        function changeTheme(themeName){
-            var themeCSS = $("#easyuiTheme");
-            var url = themeCSS.attr('href');
-            var href = url.substring(0, url.indexOf('themes')) + 'themes/' + themeName + '/easyui.css';
-            themeCSS.attr('href', href);
-            var iframe = $('iframe');
-            if(iframe.length > 0){
-                for(var i = 0; i < iframe.length; i++){
-                    var ifr = iframe[i];
-                    $(ifr).contents().find('#easyuiTheme').attr('href', href);
-                }
-            }
-            $.cookie('easyuiThemeName', themeName,{
-                     //记住cookie的天数
-                     expires: 7
-            });
-        }
-
-        if($.cookie('easyuiThemeName')){
-            changeTheme($.cookie('easyuiThemeName'));
-        }
-        /* 动态添加Tab */
-        function addTab(title, url){
-            if ($('#tabs').tabs('exists', title)){
-                $('#tabs').tabs('select', title);
-                var currentTab = $('#tabs').tabs('getSelected');
-                RefreshTab(currentTab);
-            } else {
-                var content = '<iframe scrolling="auto" frameborder="0"  src="'+url+'" style="width:100%;height:100%;overflow:hidden;"></iframe>';
-                $('#tabs').tabs('add',{
-                    title:title,
-                    content:content,
-                    closable:true
-                });
-            }
-        }
-      //刷新当前标签Tabs
-        function RefreshTab(currentTab) {
-            var url = $(currentTab.panel('options')).attr('href');
-            $('#tabs').tabs('update', {
-                tab: currentTab,
-                options: {
-                    href: url
-                }
-            });
-            currentTab.panel('refresh');
-      }
-        $(function(){
-            $("[id^='easy_menu']").each(function () {
-                $(this).tree({
-                    onClick: function(node){
-                        //alert(node.text+'-'+node.attributes.url);  // alert node text property when clicked
-                        addTab(node.text, node.attributes.url);
-                    }
-                });
-            })
-
-        });
-
-    </script>
+<script  type="text/javascript" >
+	/**
+	 * easyUI更换主题的方法
+	 * @param {Object} themeName 主题的名称
+	 * @author ZHENGWEI
+	 * @date 2015-5-16
+	 */
+	function changeTheme(themeName){
+	    var themeCSS = $("#easyuiTheme");
+	    var url = themeCSS.attr('href');
+	    var href = url.substring(0, url.indexOf('themes')) + 'themes/' + themeName + '/easyui.css';
+	    themeCSS.attr('href', href);
+	    var iframe = $('iframe');
+	    if(iframe.length > 0){
+	        for(var i = 0; i < iframe.length; i++){
+	            var ifr = iframe[i];
+	            $(ifr).contents().find('#easyuiTheme').attr('href', href);
+	        }
+	    }
+	    $.cookie('easyuiThemeName', themeName,{
+             //记住cookie的天数
+             expires: 7
+	    });
+	}
+	
+	if($.cookie('easyuiThemeName')){
+	    changeTheme($.cookie('easyuiThemeName'));
+	}
+	/* 动态添加Tab */
+	function addTab(title, url){
+	    if ($('#tabs').tabs('exists', title)){
+	        $('#tabs').tabs('select', title);
+	        tabRefresh();
+	    } else {
+	        var content = '<iframe scrolling="auto" frameborder="0"  src="'+url+'" style="width:100%;height:100%;"></iframe>';
+	        $('#tabs').tabs('add',{
+	            title:title,
+	            content:content,
+	            closable:true
+	        });
+	    }
+	}
+	//刷新当前标签Tabs
+	function tabRefresh() {
+	 var currentTab = $('#tabs').tabs('getSelected');
+	    RefreshTab(currentTab);
+	}
+	function RefreshTab(currentTab) {
+	    var url = $(currentTab.panel('options')).attr('href');
+	    $('#tabs').tabs('update', {
+	        tab: currentTab,
+	        options: {
+	            href: url
+	        }
+	    });
+	    currentTab.panel('refresh');
+	}
+	$(function(){
+	    $("[id^='easy_menu']").each(function () {
+	        $(this).tree({
+	            onClick: function(node){
+	                //alert(node.text+'-'+node.attributes.url);  // alert node text property when clicked
+	                addTab(node.text, node.attributes.url);
+	            }
+	        });
+	    })
+	    $(window).resize(function(){
+	    	$('.easyui-panel').panel('resize');//搜索栏 panel
+    	});
+	});
+	
+</script>
 
 </head>
 <body class="easyui-layout">
@@ -179,8 +184,12 @@
                         <li data-options="attributes:{'url':'system/menu/list'}">
                             <span >菜单管理</span>
                         </li>
-                        <li data-options="attributes:{'url':'http://xinyue.qq.com/?ADTAG=act.top.nav.home'}">
-                            <span >百度</span>
+                        <li data-options="attributes:{'url':'system/menu/menuTree'}">
+                            <span >菜单管理1</span>
+
+                        </li>
+                        <li data-options="attributes:{'url':'system/menu/menuTree?name=2'}">
+                            <span >菜单管理2</span>
 
                         </li>
                         <li data-options="attributes:{'url':'https://www.baidu.com/'}">
