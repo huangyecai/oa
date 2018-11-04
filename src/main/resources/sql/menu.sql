@@ -7,7 +7,7 @@ CREATE TABLE `menu` (
   `parent_id` varchar(64) DEFAULT NULL COMMENT '父ID',
   `code` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '编码',
   `sort_num` int(11) DEFAULT NULL COMMENT '排序字段',
-  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  `remarks` varchar(255) DEFAULT NULL COMMENT '备注',
   `status` int(255) DEFAULT NULL COMMENT '状态（1有效；3无效）',
   `create_date` datetime DEFAULT NULL COMMENT '创建时间',
   `create_by` varchar(64) DEFAULT NULL COMMENT '创建者',

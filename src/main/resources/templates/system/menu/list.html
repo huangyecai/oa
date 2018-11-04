@@ -95,58 +95,66 @@
 </head>
 <body style="margin-left: 0">
 	<div id="menuPanel" class="easyui-panel"   style="width:100%;height: 100%;" data-options="fit:true">
-		<div id="dataTableBady" style="height:95%; overflow-y: auto;overflow-x:hidden;" data-options="fit:true">
-			<div id="tb" style="padding:5px;height:auto">
-				<div style="margin-bottom:5px">
-					<a href="javascript:void(0);" onclick="openDialog('添加菜单','')" class="easyui-linkbutton" iconCls="icon-add" plain="true"></a>
-					<a href="#"  class="easyui-linkbutton" iconCls="icon-edit" plain="true"></a>
-					<a href="#" class="easyui-linkbutton" iconCls="icon-save" plain="true"></a>
-					<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true"></a>
-					<a href="#" onclick="$('#dd').dialog('close');" class="easyui-linkbutton" iconCls="icon-remove" plain="true"></a>
-				</div>
-				<div>
-					<form id="searchForm" action="list" method="post">
-						名称：<input name="name" th:value="${param.name}" class="easyui-textbox" style="width:100px;height:32px">
-						说明：<input name="description" th:value="${param.description}" class="easyui-textbox" style="width:100px;height:32px">
-						url：<input name="url" th:value="${param.url}" class="easyui-textbox" style="width:100px;height:32px">
-						编码：<input name="code" th:value="${param.code}" class="easyui-textbox" style="width:100px;height:32px">
-						<a href="#" class="easyui-linkbutton" onclick="$('#searchForm').submit();" iconCls="icon-search">Search</a>
-					</form>
-				</div>
-			</div>
-		    <table id="tt" title="菜单管理" class="easyui-datagrid" data-options="fit:true" style="width:auto;height:auto;" singleSelect="true" rownumbers="true" toolbar='#tb'>
-			<thead>
-				<tr>
-					<th field="name" style="min-width: 100px;width: auto;">名称</th>
-					<th field="description" style="min-width: 100px;width: auto;">说明</th>
-					<th field="url" style="min-width: 100px;width: auto;">url</th>
-					<th field="code" width="100">编码</th>
-					<th field="sortNum" width="100">排序</th>
-					<th field="name7" width="200">操作</th>
-				</tr>                          
-			</thead>                           
-				<tbody>   
-					<th:block th:each="menu:${page.result}">
-						<tr>                           
-							<td th:text="${menu.name}"></td>            
-							<td th:text="${menu.description}"></td>            
-							<td th:text="${menu.url}"></td>            
-							<td th:text="${menu.code}"></td>            
-							<td th:text="${menu.sortNum}"></td>            
-							<td >
-								<a href="#" class="easyui-linkbutton" th:onclick="'openDialog(\'编辑菜单\',\''+${ menu.id}+'\')'">编辑</a>
-								<a href="#" class="easyui-linkbutton" th:onclick="'javascript:deleteMenu(\''+${ menu.id}+'\')'">删除</a>
-								<a href="#" class="easyui-linkbutton" th:onclick="'javascript:detail(\''+${ menu.id}+'\')'">详情</a>
-							</td>            
-						</tr> 
-					</th:block>                       
-				</tbody>                           
-			</table>
-		</div>
-		<div style="position:fixed ; bottom:0px;width:100%;height:36px" >   
-		    <div id="dataTablePagination" th:if="${page.total>page.pageSize}" class="easyui-pagination" style="border:1px solid #ccc;" pagePosition="bottom" th:attr="data-options='pageNumber:'+${page.pageNum}+',total:'+${page.total}+',pageSize:'+${page.pageSize}+',onSelectPage:selectPage'">
-				</div>
-		</div>   
+		<table style="width: 100%;height: 100%;">
+			<tr style="height: 100%">
+				<td>
+					<div id="tb" style="padding:5px;height:auto">
+						<div style="margin-bottom:5px">
+							<a href="javascript:void(0);" onclick="openDialog('添加菜单','')" class="easyui-linkbutton" iconCls="icon-add" plain="true"></a>
+							<a href="#"  class="easyui-linkbutton" iconCls="icon-edit" plain="true"></a>
+							<a href="#" class="easyui-linkbutton" iconCls="icon-save" plain="true"></a>
+							<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true"></a>
+							<a href="#" onclick="$('#dd').dialog('close');" class="easyui-linkbutton" iconCls="icon-remove" plain="true"></a>
+						</div>
+						<div>
+							<form id="searchForm" action="list" method="post">
+								名称：<!--/*@thymesVar id="param" type="com.hyc.oa.modules.system.menu.entity.Menu"*/-->
+								<input name="name" th:value="${param.name}" class="easyui-textbox" style="width:100px;height:32px">
+								说明：<input name="description" th:value="${param.description}" class="easyui-textbox" style="width:100px;height:32px">
+								url：<input name="url" th:value="${param.url}" class="easyui-textbox" style="width:100px;height:32px">
+								编码：<input name="code" th:value="${param.code}" class="easyui-textbox" style="width:100px;height:32px">
+								<a href="#" class="easyui-linkbutton" onclick="$('#searchForm').submit();" iconCls="icon-search">Search</a>
+							</form>
+						</div>
+					</div>
+					<table id="tt" title="菜单管理" class="easyui-datagrid" data-options="fit:true" style="width:auto;height:auto;" singleSelect="true" rownumbers="true" toolbar='#tb'>
+						<thead>
+							<tr>
+								<th field="name" style="width: 10%;">名称</th>
+								<th field="description" style="width: 30%;">说明</th>
+								<th field="url" style="width: 20%;">url</th>
+								<th field="code"  style="width: 10%;">编码</th>
+								<th field="sortNum"  style="width: 10%;">排序</th>
+								<th field="name7"  style="width: 20%;">操作</th>
+							</tr>
+						</thead>
+						<tbody>
+							<th:block th:each="menu:${page.result}">
+								<tr>
+									<td th:text="${menu.name}"></td>
+									<td th:text="${menu.description}"></td>
+									<td th:text="${menu.url}"></td>
+									<td th:text="${menu.code}"></td>
+									<td th:text="${menu.sortNum}"></td>
+									<td >
+										<a href="#" class="easyui-linkbutton" th:onclick="'openDialog(\'编辑菜单\',\''+${ menu.id}+'\')'">编辑</a>
+										<a href="#" class="easyui-linkbutton" th:onclick="'javascript:deleteMenu(\''+${ menu.id}+'\')'">删除</a>
+										<a href="#" class="easyui-linkbutton" th:onclick="'javascript:detail(\''+${ menu.id}+'\')'">详情</a>
+									</td>
+								</tr>
+							</th:block>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td height="36px">
+					<div id="dataTablePagination" class="easyui-pagination" style="border:1px solid #ccc;" pagePosition="bottom" th:attr="data-options='pageNumber:'+${page.pageNum}+',total:'+${page.total}+',pageSize:'+${page.pageSize}+',onSelectPage:selectPage'">
+					</div>
+				</td>
+			</tr>
+		</table>
+
 		
 		<div id="dd" title="add" class="easyui-dialog"  style="height:auto; width:415px; text-align:center"
 		            data-options="resizable:true,modal:false,closed:true"  >
