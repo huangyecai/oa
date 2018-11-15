@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.hyc.oa.common.utils.TreeNode;
 import com.hyc.oa.modules.system.menu.entity.Menu;
 import com.hyc.oa.modules.system.menu.service.MenuService;
 import com.hyc.oa.modules.user.entity.User;
@@ -39,12 +40,18 @@ public class MenuController {
     
     @RequestMapping(FORM)
     public void form(Menu entity,HttpServletRequest request) throws Exception {
+    	
 		if (StringUtils.isNotBlank(entity.getId())) {
 			entity = menuService.get(entity.getId());
 			if (entity == null ) {
 				throw new Exception("数据不存在");
 			}
+		}else {
+			if (StringUtils.isBlank(entity.getParentId())) {
+				entity.setParentId("0");
+			}
 		}
+		 
 		request.setAttribute("entity", entity);
 	}
     
@@ -177,7 +184,15 @@ public class MenuController {
     }
 
     @RequestMapping("system/menu/menuTree")
-    private void menuTree  (HttpServletRequest request){
-
+    private  void menuTree  (HttpServletRequest request){
+    	Menu menu = new Menu();
+    	menu.setStatus(1);
+    	List<Menu> list = menuService.list(menu);
+    	List<TreeNode> menuTree = menuService.makeTree(list);
+    	Map<String, Object> map = new HashMap<String, Object>();
+    	map.put("status", 200);
+    	map.put("message", "success");
+    	map.put("date", menuTree);
+    	request.setAttribute("list", menuTree);
     }
 }

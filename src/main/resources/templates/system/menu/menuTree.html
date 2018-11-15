@@ -14,31 +14,25 @@
 	<script type="text/javascript" th:src="@{../../zTree_v3/js/jquery.ztree.core.js }" src="../../../static/zTree_v3/js/jquery.ztree.core.js"></script>
 	<script type="text/javascript" th:src="@{../../zTree_v3/js/jquery.ztree.excheck.js }" src="../../../static/zTree_v3/js/jquery.ztree.excheck.js"></script>
 	<script type="text/javascript" th:src="@{../../zTree_v3/js/jquery.ztree.exedit.js }" src="../../../static/zTree_v3/js/jquery.ztree.exedit.js"></script>
-	<SCRIPT type="text/javascript">
+	<script th:inline="javascript" type="text/javascript">
 		<!--
 		var setting = {
 			view: {
 				dblClickExpand: false
 			},
 			check: {
-				enable: true
+				enable: false
 			},
 			callback: {
 				onRightClick: OnRightClick,
-				beforeClick: function (treeId, treeNode) {
-			          var zTree = $.fn.zTree.getZTreeObj("tree");
-			          if (treeNode.isParent) {
-			            zTree.expandNode(treeNode);
-			            return false;
-			          } else {
-			            demoIframe.attr("src", treeNode.file);
-			            return true;
-			          }
-			        }
+				onClick: zTreeBeforeClick
 			}
 		};
-
-		var zNodes =[
+		function zTreeBeforeClick(event,treeId, treeNode, clickFlag) {
+			    console.log(treeNode);
+				document.getElementById('testIframe').src='list?id='+treeNode.id;
+			};
+		var zNodes123 =[
 			{id:1, name:"无右键菜单 1", open:true, noR:true,
 				children:[
 					   {id:11, name:"节点 1-1", noR:true,hyc:11},
@@ -52,7 +46,7 @@
 					   {id:23, name:"节点 2-3"},
 					   {id:24, name:"节点 2-4"}
 				]},
-			{id:3, name:"右键操作 3", open:true,
+			{id:3, name:"右键操作 3",file:"list", open:true,
 				children:[
 					   {id:31, name:"节点 3-1",file:"list"},
 					   {id:32, name:"节点 3-2",file:"list?name=2"},
@@ -65,7 +59,7 @@
 				]}
 				]}
   	 	];
-
+		var zNodes = [[${list}]];
 		function OnRightClick(event, treeId, treeNode) {
 			
 			if (!treeNode && event.target.tagName.toLowerCase() != "button" && $(event.target).parents("a").length == 0) {
@@ -108,14 +102,13 @@
 		var addCount = 1;
 		function addTreeNode() {
 			hideRMenu();
-			var newNode = { name:"增加" + (addCount++)};
-			
 			console.log(zTree.getSelectedNodes()[0]);
 			if (zTree.getSelectedNodes()[0]) {
-				newNode.checked = zTree.getSelectedNodes()[0].checked;
-				zTree.addNodes(zTree.getSelectedNodes()[0], newNode);
+				var src = 'form?parentId=' + zTree.getSelectedNodes()[0].id ;
+				document.getElementById('testIframe').contentWindow.openDialog( '添加菜单' , src);
 			} else {
-				zTree.addNodes(null, newNode);
+				var src = 'form?parentId=0';
+				document.getElementById('testIframe').contentWindow.openDialog( '添加菜单' , src);
 			}
 		}
 		function removeTreeNode() {
@@ -128,10 +121,35 @@
 						zTree.removeNode(nodes[0]);
 					}
 				} else {
-					zTree.removeNode(nodes[0]);
+						
+						$.messager.confirm('删除提示', '你确定要删除该项吗?', function(r){
+							if (r){
+								$.ajax({
+									url:'delete?id=' + nodes[0].id,
+									type:"POST",
+									dataType:"json",
+									success: function(data){
+										/*console.log(data);
+										 var result = $.parseJSON(data); 
+										console.log(result.status); */
+										if (data.status == 200 || data.status == "200") {
+											$.messager.alert('删除结果','删除成功！','warning',function(){window.location.reload();});
+											zTree.removeNode(nodes[0]);
+										}else{
+											$.messager.alert('删除结果','删除失败！','error');
+										}
+										
+									},
+								    error:function(){
+								    	$.messager.alert('删除结果','删除失败！','error');
+								    }
+								});
+							}
+						});
 				}
 			}
 		}
+		
 		function checkTreeNode(checked) {
 			var nodes = zTree.getSelectedNodes();
 			if (nodes && nodes.length>0) {
@@ -163,7 +181,7 @@
 		    }
 		//-->
 		 
-	</SCRIPT>
+	</script>
 	<style type="text/css">
 		div#rMenu {position:absolute; visibility:hidden; top:0; background-color: #555;text-align: left;padding: 2px;}
 		div#rMenu ul li{
@@ -192,9 +210,9 @@
 		<ul>
 			<li id="m_add" onclick="addTreeNode();">增加节点</li>
 			<li id="m_del" onclick="removeTreeNode();">删除节点</li>
-			<li id="m_check" onclick="checkTreeNode(true);">Check节点</li>
+			<!-- <li id="m_check" onclick="checkTreeNode(true);">Check节点</li>
 			<li id="m_unCheck" onclick="checkTreeNode(false);">unCheck节点</li>
-			<li id="m_reset" onclick="resetTree();">恢复zTree</li>
+			<li id="m_reset" onclick="resetTree();">恢复zTree</li> -->
 		</ul>
 	</div>
 </div>

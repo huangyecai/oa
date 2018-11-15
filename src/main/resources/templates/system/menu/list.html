@@ -10,10 +10,10 @@
     <script th:src="@{../../jquery-easyui-1.6.6/locale/easyui-lang-zh_CN.js }" type="text/javascript"></script>
     <script type="text/javascript">
     $(function () {
-    	$("#dataTableBady").height($("#menuPanel").height()-36);
+    /* 	$("#dataTableBady").height($("#menuPanel").height()-36);
 		$(window).resize(function(){
 			$("#dataTableBady").height($("#menuPanel").height()-36);
-		});
+		}); */
 	})
     function closeDialog() {
     	$('#dd').dialog('close');
@@ -25,15 +25,12 @@
 			alert(window.location.pathname); */
 			window.location.href=window.location.pathname+'?pageNumber='+pageNumber+'&pageSize='+pageSize+'&'+$("form").serialize();
 		}
-		function openDialog(title,id) {
+		function openDialog(title,url) {
 			$('#dd').dialog({
 			    title: title,
 			    modal:true
 			});
-			var url = 'form'
-			if (id != null && id != "") {
-				url += '?id='+id;
-			}
+			 
 			$('#dd').dialog('refresh', url);
 			$('#dd').dialog('open');
 			$("#dd").panel("move",{top:$(document).scrollTop() + ($(window).height()* 0.5) -200});//位置设置
@@ -60,13 +57,16 @@
 							console.log(result.status); */
 							if (data.status == 200 || data.status == "200") {
 								$.messager.alert('删除结果','删除成功！','warning',function(){window.location.reload();});
+								return true;
 							}else{
 								$.messager.alert('删除结果','删除失败！','error');
+								return false;
 							}
 							
 						},
 					    error:function(){
 					    	$.messager.alert('删除结果','删除失败！','error');
+					    	return false;
 					    }
 					});
 				}
@@ -100,7 +100,7 @@
 				<td>
 					<div id="tb" style="padding:5px;height:auto">
 						<div style="margin-bottom:5px">
-							<a href="javascript:void(0);" onclick="openDialog('添加菜单','')" class="easyui-linkbutton" iconCls="icon-add" plain="true"></a>
+							<a href="javascript:void(0);" onclick="openDialog('添加菜单','form')" class="easyui-linkbutton" iconCls="icon-add" plain="true"></a>
 							<a href="#"  class="easyui-linkbutton" iconCls="icon-edit" plain="true"></a>
 							<a href="#" class="easyui-linkbutton" iconCls="icon-save" plain="true"></a>
 							<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true"></a>
@@ -137,7 +137,7 @@
 									<td th:text="${menu.code}"></td>
 									<td th:text="${menu.sortNum}"></td>
 									<td >
-										<a href="#" class="easyui-linkbutton" th:onclick="'openDialog(\'编辑菜单\',\''+${ menu.id}+'\')'">编辑</a>
+										<a href="#" class="easyui-linkbutton" th:onclick="'openDialog(\'编辑菜单\',\'form?id='+${ menu.id}+'\')'">编辑</a>
 										<a href="#" class="easyui-linkbutton" th:onclick="'javascript:deleteMenu(\''+${ menu.id}+'\')'">删除</a>
 										<a href="#" class="easyui-linkbutton" th:onclick="'javascript:detail(\''+${ menu.id}+'\')'">详情</a>
 									</td>

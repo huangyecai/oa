@@ -1,12 +1,16 @@
 package com.hyc.oa.modules.system.menu.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.hyc.oa.common.utils.TreeNode;
 import com.hyc.oa.modules.system.menu.dao.MenuDao;
 import com.hyc.oa.modules.system.menu.entity.Menu;
 
@@ -92,4 +96,51 @@ public class MenuService {
 			return false;
 		}
 	}
+	
+	public  List<TreeNode> makeTree(List<Menu> menuList) {
+		List<TreeNode> resultList = new ArrayList<TreeNode>();
+		Map<String, List<TreeNode>> map = new HashMap<String, List<TreeNode>>();
+		for (Menu menu : menuList) {
+			TreeNode node = menu.toTreeNode();
+			if (StringUtils.isNotBlank(menu.getParentId()) && "0".equals(menu.getParentId())) {
+				resultList.add(node);
+			} else {
+				List<TreeNode> subList = map.get(menu.getParentId());
+				if (subList == null || subList.size() == 0) {
+					subList = new ArrayList<TreeNode>();
+				}
+				subList.add(node);
+				map.put(menu.getParentId(), subList);
+			}
+		}
+
+		return makeMenuTree(resultList, map);
+
+	}
+
+	public  List<TreeNode> makeMenuTree(List<TreeNode> rootList, Map<String, List<TreeNode>> map) {
+		for (TreeNode node : rootList) {
+			List<TreeNode> subList = map.get(node.getId());
+			if (subList != null && subList.size() > 0) {
+				subList = makeMenuTree(subList, map);
+			}
+			node.setChildren(subList);
+		}
+		return rootList;
+	}
+	
+	public void treeToString(List<Menu> menuTree) {
+		StringBuilder result = null;
+		result.append("[");
+		for (Menu menu : menuTree) {
+			String menuStr = "{";
+			menuStr += "id:"+menu.getId();
+			menuStr += ",name:"+menu.getName();
+			menuStr += ", open:true, noR:true";
+			menuStr += "}";
+			result.append(menuStr);
+		}
+		result.append("]");
+	}
+	
 }
