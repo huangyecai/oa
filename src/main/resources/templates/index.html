@@ -15,7 +15,7 @@
         #header .top-btns span {vertical-align:middle;}
         #header .top-btns .easyui-combobox {width:80px;}
     </style>
-<script  type="text/javascript" >
+<script th:inline="javascript" type="text/javascript" >
 	/**
 	 * easyUI更换主题的方法
 	 * @param {Object} themeName 主题的名称
@@ -72,7 +72,25 @@
 	    });
 	    currentTab.panel('refresh');
 	}
+	
+	var treeData =  [[${list1}]];
 	$(function(){
+		for (var i = 0; i < treeData.length; i++) {
+			var menulist  = "<div title='"+treeData[i].name+"'   style='padding:10px'>" +
+					"<ul id='easy_menu_"+treeData[i].id+"' class='easyui-tree'>" +
+					"</ul></div>" ;
+			$("#easy_menu_accordion").accordion("add", {
+				title: treeData[i].name,
+				content:menulist
+			});
+			$('#easy_menu_'+treeData[i].id).tree({
+				data:  treeData[i].children
+			});
+		}
+    	 $('#easy_menu_accordion').accordion('select',0)
+		
+		
+		
 	    $("[id^='easy_menu']").each(function () {
 	        $(this).tree({
 	            onClick: function(node){
@@ -85,6 +103,8 @@
 	    	$('.easyui-panel').panel('resize');//搜索栏 panel
     	});
 	});
+	
+	
 	
 </script>
 
@@ -129,7 +149,7 @@
 
 	</div>
     <div data-options="region:'west',split:true,title:'主菜单'"  style="width:200px;">
-        <div class="easyui-accordion" style="height: 100%">
+        <div id="easy_menu_accordion" class="easyui-accordion" style="height: 100%">
             <div title="个人中心"  data-options="iconCls:'icon-ok'" style="overflow:auto;">
 
                 <ul id="easy_menu_1" class="easyui-tree">

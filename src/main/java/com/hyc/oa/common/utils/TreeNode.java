@@ -4,11 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TreeNode {
+	
     private String id;
+    
     private String name;
+    
+    private String text;
+    
     private String uri;
+    
     private String code;
-    private String open;
+    
+    private boolean open;
+    
+    
+    private Attributes attributes;
+    
     private List<TreeNode> children = new ArrayList<TreeNode>();
 	public String getId() {
 		return id;
@@ -34,10 +45,11 @@ public class TreeNode {
 	public void setCode(String code) {
 		this.code = code;
 	}
-	public String getOpen() {
+	 
+	public boolean isOpen() {
 		return open;
 	}
-	public void setOpen(String open) {
+	public void setOpen(boolean open) {
 		this.open = open;
 	}
 	public List<TreeNode> getChildren() {
@@ -45,6 +57,18 @@ public class TreeNode {
 	}
 	public void setChildren(List<TreeNode> children) {
 		this.children = children;
+	}
+	public Attributes getAttributes() {
+		return attributes;
+	}
+	public void setAttributes(Attributes attributes) {
+		this.attributes = attributes;
+	}
+	public String getText() {
+		return text;
+	}
+	public void setText(String text) {
+		this.text = text;
 	}
 	
     

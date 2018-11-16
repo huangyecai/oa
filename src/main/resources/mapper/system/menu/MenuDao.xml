@@ -40,6 +40,9 @@
 			<if test="code!=null and code!=''">
 			    and code LIKE '%' #{code} '%'
 			</if>
+			<if test="id !=null and id!=''">
+			    and id = #{id} or parent_id = #{id}
+			</if>
 		</where>
 	</select>
 	<insert id="insert" parameterType="com.hyc.oa.modules.system.menu.entity.Menu">

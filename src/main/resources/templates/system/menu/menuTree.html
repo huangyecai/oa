@@ -30,7 +30,7 @@
 		};
 		function zTreeBeforeClick(event,treeId, treeNode, clickFlag) {
 			    console.log(treeNode);
-				document.getElementById('testIframe').src='list?id='+treeNode.id;
+				window.location.href="menuTree?id="+treeNode.id;; 
 			};
 		var zNodes123 =[
 			{id:1, name:"无右键菜单 1", open:true, noR:true,
@@ -170,6 +170,8 @@
 			rMenu = $("#rMenu");
 			 demoIframe = $("#testIframe");
 		      demoIframe.bind("load", loadReady);
+		      var node = zTree.getNodeByParam("id",[[${id}]] );
+		      zTree.expandNode(node, true, false);//将指定ID节点展开
 		});
 		 function loadReady() {
 		      var bodyH = demoIframe.contents().find("body").get(0).scrollHeight,
@@ -201,8 +203,74 @@
 			<tr style="width:100%;height:100%;border: 0;">
 				<td style="width:15%;height:100%;vertical-align: top;"><ul id="treeDemo" class="ztree" style="overflow-y: hidden;border: 0;margin: 0"></ul></td>
 				<td id="menuTreeIframeDiv" style="width:85%;height:100%;overflow:hidden;">
-					<iframe ID="testIframe" Name="testIframe" scrolling="no" frameborder="0"     src="list" style="width:100%;height:100% !important;overflow-y:hidden;" >
-				</iframe></td>
+					<div id="menuPanel" class="easyui-panel"   style="width:100%;height: 100%;" data-options="fit:true">
+						<table style="width: 100%;height: 100%;">
+							<tr style="height: 100%">
+								<td>
+									<div id="tb" style="padding:5px;height:auto">
+										<div style="margin-bottom:5px">
+											<a href="javascript:void(0);" th:onclick="'openDialog(\'添加菜单\',\'form?parentId='+${id}+'\')'" class="easyui-linkbutton" iconCls="icon-add" plain="true"></a>
+											<a href="#"  class="easyui-linkbutton" iconCls="icon-edit" plain="true"></a>
+											<a href="#" class="easyui-linkbutton" iconCls="icon-save" plain="true"></a>
+											<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true"></a>
+											<a href="#" onclick="$('#dd').dialog('close');" class="easyui-linkbutton" iconCls="icon-remove" plain="true"></a>
+										</div>
+										<div>
+											<form id="searchForm" action="list" method="post">
+												<input name="id" type="hidden" th:value="${param.id}">
+												名称：<!--/*@thymesVar id="param" type="com.hyc.oa.modules.system.menu.entity.Menu"*/-->
+												<input name="name" th:value="${param.name}" class="easyui-textbox" style="width:100px;height:32px">
+												说明：<input name="description" th:value="${param.description}" class="easyui-textbox" style="width:100px;height:32px">
+												url：<input name="url" th:value="${param.url}" class="easyui-textbox" style="width:100px;height:32px">
+												编码：<input name="code" th:value="${param.code}" class="easyui-textbox" style="width:100px;height:32px">
+												<a href="#" class="easyui-linkbutton" onclick="$('#searchForm').submit();" iconCls="icon-search">Search</a>
+											</form>
+										</div>
+									</div>
+									<table id="tt" title="菜单管理" class="easyui-datagrid" data-options="fit:true" style="width:auto;height:auto;" singleSelect="true" rownumbers="true" toolbar='#tb'>
+										<thead>
+											<tr>
+												<th field="name" style="width: 10%;">名称</th>
+												<th field="description" style="width: 30%;">说明</th>
+												<th field="url" style="width: 20%;">url</th>
+												<th field="code"  style="width: 10%;">编码</th>
+												<th field="sortNum"  style="width: 10%;">排序</th>
+												<th field="name7"  style="width: 20%;">操作</th>
+											</tr>
+										</thead>
+										<tbody>
+											<th:block th:each="menu:${page.result}">
+												<tr>
+													<td th:text="${menu.name}"></td>
+													<td th:text="${menu.description}"></td>
+													<td th:text="${menu.url}"></td>
+													<td th:text="${menu.code}"></td>
+													<td th:text="${menu.sortNum}"></td>
+													<td >
+														<a href="#" class="easyui-linkbutton" th:onclick="'openDialog(\'编辑菜单\',\'form?id='+${ menu.id}+'\')'">编辑</a>
+														<a href="#" class="easyui-linkbutton" th:onclick="'javascript:deleteMenu(\''+${ menu.id}+'\')'">删除</a>
+														<a href="#" class="easyui-linkbutton" th:onclick="'javascript:detail(\''+${ menu.id}+'\')'">详情</a>
+													</td>
+												</tr>
+											</th:block>
+										</tbody>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td height="36px">
+									<div id="dataTablePagination" class="easyui-pagination" style="border:1px solid #ccc;" pagePosition="bottom" th:attr="data-options='pageNumber:'+${page.pageNum}+',total:'+${page.total}+',pageSize:'+${page.pageSize}+',onSelectPage:selectPage'">
+									</div>
+								</td>
+							</tr>
+						</table>
+				
+						
+						<div id="dd" title="add" class="easyui-dialog"  style="height:auto; width:415px; text-align:center"
+						            data-options="resizable:true,modal:false,closed:true"  >
+						</div>
+					</div>
+				</td>
 			</tr>
 		</table>
 	</div>
@@ -216,5 +284,89 @@
 		</ul>
 	</div>
 </div>
+<script type="text/javascript">
+    $(function () {
+    /* 	$("#dataTableBady").height($("#menuPanel").height()-36);
+		$(window).resize(function(){
+			$("#dataTableBady").height($("#menuPanel").height()-36);
+		}); */
+	})
+    function closeDialog() {
+    	$('#dd').dialog('close');
+    	/* window.location.reload(); */
+    	parent.parent.tabRefresh();
+	} 
+		function selectPage(pageNumber, pageSize){
+			/* alert('pageNumber:'+pageNumber+',pageSize:'+pageSize);
+			alert(window.location.pathname); */
+			window.location.href=window.location.pathname+'?pageNumber='+pageNumber+'&pageSize='+pageSize+'&'+$("form").serialize();
+		}
+		function openDialog(title,url) {
+			$('#dd').dialog({
+			    title: title,
+			    modal:true
+			});
+			 
+			$('#dd').dialog('refresh', url);
+			$('#dd').dialog('open');
+			$("#dd").panel("move",{top:$(document).scrollTop() + ($(window).height()* 0.5) -200});//位置设置
+		}
+		function deleteMenu(id) {
+			var url = 'delete'
+			if (id != null && id != "") {
+				url += '?id='+id;
+			}else
+			{
+				$.messager.alert('操作提示','请选择数据！','error');
+				return ;
+			}
+			
+			$.messager.confirm('删除提示', '你确定要删除该项吗?', function(r){
+				if (r){
+					$.ajax({
+						url:url,
+						type:"POST",
+						dataType:"json",
+						success: function(data){
+							/*console.log(data);
+							 var result = $.parseJSON(data); 
+							console.log(result.status); */
+							if (data.status == 200 || data.status == "200") {
+								$.messager.alert('删除结果','删除成功！','warning',function(){window.location.reload();});
+								return true;
+							}else{
+								$.messager.alert('删除结果','删除失败！','error');
+								return false;
+							}
+							
+						},
+					    error:function(){
+					    	$.messager.alert('删除结果','删除失败！','error');
+					    	return false;
+					    }
+					});
+				}
+			});
+		}
+		function detail(id) {
+			$('#dd').dialog({
+			    title: '菜单详情',
+			    modal:true
+			});
+			var url = 'detail'
+			if (id != null && id != "") {
+				url += '?id='+id;
+			}else{
+				$.messager.alert('操作提示','请选择数据！','error');
+				return ;
+			}
+			$('#dd').dialog('refresh', url);
+			$('#dd').dialog('open');
+			$("#dd").panel("move",{top:$(document).scrollTop() + ($(window).height()* 0.5) -250});
+		}
+		function closeDetail() {
+	    	$('#dd').dialog('close');
+		}
+	</script>
 </body>
 </html>

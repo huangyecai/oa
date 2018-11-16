@@ -100,7 +100,7 @@
 				<td>
 					<div id="tb" style="padding:5px;height:auto">
 						<div style="margin-bottom:5px">
-							<a href="javascript:void(0);" onclick="openDialog('添加菜单','form')" class="easyui-linkbutton" iconCls="icon-add" plain="true"></a>
+							<a href="javascript:void(0);" th:onclick="'openDialog(\'添加菜单\',\'form?parentId='+${id}+'\')'" class="easyui-linkbutton" iconCls="icon-add" plain="true"></a>
 							<a href="#"  class="easyui-linkbutton" iconCls="icon-edit" plain="true"></a>
 							<a href="#" class="easyui-linkbutton" iconCls="icon-save" plain="true"></a>
 							<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true"></a>
@@ -108,6 +108,7 @@
 						</div>
 						<div>
 							<form id="searchForm" action="list" method="post">
+								<input name="id" type="hidden" th:value="${param.id}">
 								名称：<!--/*@thymesVar id="param" type="com.hyc.oa.modules.system.menu.entity.Menu"*/-->
 								<input name="name" th:value="${param.name}" class="easyui-textbox" style="width:100px;height:32px">
 								说明：<input name="description" th:value="${param.description}" class="easyui-textbox" style="width:100px;height:32px">

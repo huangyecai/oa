@@ -3,6 +3,7 @@ package com.hyc.oa.modules.system.menu.entity;
 import java.util.List;
 
 import com.hyc.oa.common.base.entity.BaseEntity;
+import com.hyc.oa.common.utils.Attributes;
 import com.hyc.oa.common.utils.TreeNode;
 
 /**
@@ -33,6 +34,8 @@ public class Menu extends BaseEntity<Menu>{
 	private transient Menu parentMenu;
 
 	private transient List<Menu> subMenuList;
+	
+	private transient List<Menu> children;
 	
 	public String getName() {
 		return name;
@@ -109,7 +112,7 @@ public class Menu extends BaseEntity<Menu>{
 
 	 @Override
 	public String toString() {
-		String result = "{id:" + this.id + ",name:" + this.name ;
+		String result = "{id:" + this.id + ",text:" + this.name + ",url:" +this.url;
 				if (subMenuList !=null && subMenuList .size() > 0) {
 					result += ",children:" + this.subMenuList;
 				}
@@ -121,7 +124,20 @@ public class Menu extends BaseEntity<Menu>{
 		TreeNode node = new TreeNode();
 		node.setId(this.id);
 		node.setName(this.name);
+		node.setText(name);
 		node.setUri(this.url);
+		Attributes attributes = new Attributes();
+		attributes.setUrl(this.url);
+		node.setAttributes(attributes);
 		return node;
 	}
+
+	public List<Menu> getChildren() {
+		return children;
+	}
+
+	public void setChildren(List<Menu> children) {
+		this.children = children;
+	}
+	
 }

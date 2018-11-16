@@ -149,21 +149,22 @@ public class MenuController {
     
     @RequestMapping(LIST)
     public void list(Menu entity,HttpServletRequest request){
-    	String pageNumber = request.getParameter("pageNumber");
-    	String pageSize = request.getParameter("pageSize");
-    	int pn = 1;
-    	int ps = 10;
-    	if (StringUtils.isNotBlank(pageNumber)) {
-    		pn = Integer.parseInt(pageNumber);
-		}
-    	if (StringUtils.isNotBlank(pageSize)) {
-    		ps = Integer.parseInt(pageSize);
-    	}
-    	//分页并查询
-        Page page = PageHelper.startPage( pn, ps );
-    	List<Menu> list = menuService.list(entity);
-//    	request.setAttribute("list", list);
-    	request.setAttribute("page", page);
+	    	String pageNumber = request.getParameter("pageNumber");
+	    	String pageSize = request.getParameter("pageSize");
+	    	int pn = 1;
+	    	int ps = 10;
+	    	if (StringUtils.isNotBlank(pageNumber)) {
+	    		pn = Integer.parseInt(pageNumber);
+			}
+	    	if (StringUtils.isNotBlank(pageSize)) {
+	    		ps = Integer.parseInt(pageSize);
+	    	}
+	    	//分页并查询
+	        Page page = PageHelper.startPage( pn, ps );
+	    	List<Menu> list = menuService.list(entity);
+	//    	request.setAttribute("list", list);
+	    	request.setAttribute("page", page);
+	    	request.setAttribute("id", entity.getParentId());
     }
     
     @RequestMapping(JSON_LIST)
@@ -184,15 +185,30 @@ public class MenuController {
     }
 
     @RequestMapping("system/menu/menuTree")
-    private  void menuTree  (HttpServletRequest request){
+    private  void menuTree  (Menu entity,HttpServletRequest request){
     	Menu menu = new Menu();
     	menu.setStatus(1);
     	List<Menu> list = menuService.list(menu);
-    	List<TreeNode> menuTree = menuService.makeTree(list);
-    	Map<String, Object> map = new HashMap<String, Object>();
-    	map.put("status", 200);
-    	map.put("message", "success");
-    	map.put("date", menuTree);
+    	List<TreeNode> menuTree = menuService.makeTree(list ,entity.getId());
+    	 
     	request.setAttribute("list", menuTree);
+    	
+    	
+    	String pageNumber = request.getParameter("pageNumber");
+    	String pageSize = request.getParameter("pageSize");
+    	int pn = 1;
+    	int ps = 10;
+    	if (StringUtils.isNotBlank(pageNumber)) {
+    		pn = Integer.parseInt(pageNumber);
+		}
+    	if (StringUtils.isNotBlank(pageSize)) {
+    		ps = Integer.parseInt(pageSize);
+    	}
+    	//分页并查询
+        Page page = PageHelper.startPage( pn, ps );
+    	menuService.list(entity);
+//    	request.setAttribute("list", list);
+    	request.setAttribute("page", page);
+    	request.setAttribute("id", entity.getParentId());
     }
 }

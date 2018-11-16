@@ -97,11 +97,14 @@ public class MenuService {
 		}
 	}
 	
-	public  List<TreeNode> makeTree(List<Menu> menuList) {
+	public  List<TreeNode> makeTree( List<Menu> menuList , String openId) {
 		List<TreeNode> resultList = new ArrayList<TreeNode>();
 		Map<String, List<TreeNode>> map = new HashMap<String, List<TreeNode>>();
 		for (Menu menu : menuList) {
 			TreeNode node = menu.toTreeNode();
+			if (menu.getId().equals(openId)) {
+				node.setOpen(true);
+			}
 			if (StringUtils.isNotBlank(menu.getParentId()) && "0".equals(menu.getParentId())) {
 				resultList.add(node);
 			} else {
@@ -113,7 +116,7 @@ public class MenuService {
 				map.put(menu.getParentId(), subList);
 			}
 		}
-
+ 
 		return makeMenuTree(resultList, map);
 
 	}

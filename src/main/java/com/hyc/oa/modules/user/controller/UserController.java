@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hyc.oa.common.utils.TreeNode;
+import com.hyc.oa.modules.system.menu.entity.Menu;
+import com.hyc.oa.modules.system.menu.service.MenuService;
 import com.hyc.oa.modules.user.entity.User;
 import com.hyc.oa.modules.user.service.UserService;
 
@@ -26,6 +28,8 @@ public class UserController {
     
 	@Autowired
     private UserService userService;
+	@Autowired
+    private MenuService menuService;
 
     @RequestMapping(TEST)
     @ResponseBody
@@ -43,7 +47,11 @@ public class UserController {
 //    }
     @RequestMapping("index")
     public String index(HttpServletRequest request){
-         
+    	Menu menu = new Menu();
+    	menu.setStatus(1);
+    	List<Menu> list = menuService.list(menu);
+    	List<TreeNode> menuTree = menuService.makeTree( list, null);
+    	request.setAttribute("list1", menuTree);
         return "index";
     }
 }
