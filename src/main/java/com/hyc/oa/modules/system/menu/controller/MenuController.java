@@ -209,6 +209,6 @@ public class MenuController {
     	menuService.list(entity);
 //    	request.setAttribute("list", list);
     	request.setAttribute("page", page);
-    	request.setAttribute("id", entity.getParentId());
+    	request.setAttribute("id", entity.getId());
     }
 }

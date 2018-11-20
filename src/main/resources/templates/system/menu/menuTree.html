@@ -29,7 +29,7 @@
 			}
 		};
 		function zTreeBeforeClick(event,treeId, treeNode, clickFlag) {
-			    console.log(treeNode);
+			    /* console.log(treeNode); */
 				window.location.href="menuTree?id="+treeNode.id;; 
 			};
 		var zNodes123 =[
@@ -69,7 +69,7 @@
 				zTree.selectNode(treeNode);
 				showRMenu("node", event.clientX, event.clientY);
 			}
-			console.log(treeNode);
+			/* //console.log(treeNode); */
 		}
 
 		function showRMenu(type, x, y) {
@@ -102,7 +102,7 @@
 		var addCount = 1;
 		function addTreeNode() {
 			hideRMenu();
-			console.log(zTree.getSelectedNodes()[0]);
+			/* //console.log(zTree.getSelectedNodes()[0]); */
 			if (zTree.getSelectedNodes()[0]) {
 				var src = 'form?parentId=' + zTree.getSelectedNodes()[0].id ;
 				document.getElementById('testIframe').contentWindow.openDialog( '添加菜单' , src);
@@ -170,9 +170,22 @@
 			rMenu = $("#rMenu");
 			 demoIframe = $("#testIframe");
 		      demoIframe.bind("load", loadReady);
-		      var node = zTree.getNodeByParam("id",[[${id}]] );
-		      zTree.expandNode(node, true, false);//将指定ID节点展开
+		      var nodeid = [[${id}]];
+		      if (nodeid != null && nodeid !='') {
+		    	  var node = zTree.getNodeByParam("id",nodeid,null);
+			      zTree.expandNode(node,true,true,true);//将指定ID节点展开
+			      expandParentNode(node);
+			}
+		     
 		});
+		
+		function expandParentNode(node){
+			var parentNode = node.getParentNode();
+			if(parentNode != null){
+				zTree.expandNode(parentNode,true,true,true);
+				expandParentNode(parentNode);
+			}
+		}
 		 function loadReady() {
 		      var bodyH = demoIframe.contents().find("body").get(0).scrollHeight,
 		        htmlH = demoIframe.contents().find("html").get(0).scrollHeight,
