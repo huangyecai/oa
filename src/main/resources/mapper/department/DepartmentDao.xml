@@ -11,23 +11,58 @@
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
     <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
-    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy.id" />
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
-    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+    <result column="update_by" jdbcType="VARCHAR" property="updateBy.id" />
   </resultMap>
   <sql id="Base_Column_List">
     id, name, description, code, parent_id, parent_ids, status, remark, create_date, 
     create_by, update_date, update_by
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+  <select id="get" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from department
     where id = #{id,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from department
-    where id = #{id,jdbcType=VARCHAR}
+  <select id="list" parameterType="com.hyc.oa.modules.department.entity.Department" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from department
+    <where>
+			<if test="name!=null and name!=''">
+			    and name LIKE '%' #{name} '%'
+			</if>
+			<if test="description!=null and description!=''">
+			    and description LIKE '%' #{description} '%'
+			</if>
+			<if test="parentId!=null and parentId!=''">
+			    and parent_id LIKE '%' #{parentId} '%'
+			</if>
+			<if test="parentIds!=null and parentIds!=''">
+			    and parent_ids LIKE '%' #{parentIds} '%'
+			</if>
+			<if test="code!=null and code!=''">
+			    and code LIKE '%' #{code} '%'
+			</if>
+			<if test="status !=null and status !=''">
+			    and status = #{status} 
+			</if>
+		</where>
+  </select>
+  
+  
+  
+  
+  <delete id="delete" parameterType="java.lang.String">
+     update department
+     set status = 3
+     where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByParentId" parameterType="java.lang.String">
+     update department
+     set status = 3
+    where parent_id = #{parentId,jdbcType=VARCHAR} and  status =1
   </delete>
   <insert id="insert" parameterType="com.hyc.oa.modules.department.entity.Department">
     insert into department (id, name, description, 
@@ -38,7 +73,7 @@
     values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
       #{code,jdbcType=VARCHAR}, #{parentId,jdbcType=VARCHAR}, #{parentIds,jdbcType=VARCHAR}, 
       #{status,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
-      #{createBy,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}
+      #{createBy.id,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, #{updateBy.id,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.hyc.oa.modules.department.entity.Department">
@@ -110,13 +145,13 @@
         #{createDate,jdbcType=TIMESTAMP},
       </if>
       <if test="createBy != null">
-        #{createBy,jdbcType=VARCHAR},
+        #{createBy.id,jdbcType=VARCHAR},
       </if>
       <if test="updateDate != null">
         #{updateDate,jdbcType=TIMESTAMP},
       </if>
       <if test="updateBy != null">
-        #{updateBy,jdbcType=VARCHAR},
+        #{updateBy.id,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -148,18 +183,18 @@
         create_date = #{createDate,jdbcType=TIMESTAMP},
       </if>
       <if test="createBy != null">
-        create_by = #{createBy,jdbcType=VARCHAR},
+        create_by = #{createBy.id,jdbcType=VARCHAR},
       </if>
       <if test="updateDate != null">
         update_date = #{updateDate,jdbcType=TIMESTAMP},
       </if>
       <if test="updateBy != null">
-        update_by = #{updateBy,jdbcType=VARCHAR},
+        update_by = #{updateBy.id,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hyc.oa.modules.department.entity.Department">
+  <update id="update" parameterType="com.hyc.oa.modules.department.entity.Department">
     update department
     set name = #{name,jdbcType=VARCHAR},
       description = #{description,jdbcType=VARCHAR},
@@ -169,9 +204,9 @@
       status = #{status,jdbcType=INTEGER},
       remark = #{remark,jdbcType=VARCHAR},
       create_date = #{createDate,jdbcType=TIMESTAMP},
-      create_by = #{createBy,jdbcType=VARCHAR},
+      create_by = #{createBy.id,jdbcType=VARCHAR},
       update_date = #{updateDate,jdbcType=TIMESTAMP},
-      update_by = #{updateBy,jdbcType=VARCHAR}
+      update_by = #{updateBy.id,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

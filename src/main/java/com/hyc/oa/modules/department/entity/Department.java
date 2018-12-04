@@ -2,10 +2,15 @@ package com.hyc.oa.modules.department.entity;
 
 import java.util.Date;
 
-public class Department {
-    private String id;
+import com.hyc.oa.common.base.entity.BaseEntity;
+import com.hyc.oa.modules.system.menu.entity.Menu;
 
-    private String name;
+public class Department extends BaseEntity<Department>{
+
+    /** serialVersionUID*/
+	private static final long serialVersionUID = 1L;
+
+	private String name;
 
     private String description;
 
@@ -19,13 +24,7 @@ public class Department {
 
     private String remark;
 
-    private Date createDate;
-
-    private String createBy;
-
-    private Date updateDate;
-
-    private String updateBy;
+    private transient Department parent;
 
     public String getId() {
         return id;
@@ -99,13 +98,6 @@ public class Department {
         this.createDate = createDate;
     }
 
-    public String getCreateBy() {
-        return createBy;
-    }
-
-    public void setCreateBy(String createBy) {
-        this.createBy = createBy == null ? null : createBy.trim();
-    }
 
     public Date getUpdateDate() {
         return updateDate;
@@ -115,11 +107,12 @@ public class Department {
         this.updateDate = updateDate;
     }
 
-    public String getUpdateBy() {
-        return updateBy;
-    }
+	public Department getParent() {
+		return parent;
+	}
 
-    public void setUpdateBy(String updateBy) {
-        this.updateBy = updateBy == null ? null : updateBy.trim();
-    }
+	public void setParent(Department parent) {
+		this.parent = parent;
+	}
+    
 }

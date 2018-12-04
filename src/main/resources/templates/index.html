@@ -104,8 +104,26 @@
     	});
 	});
 	
-	
-	
+	function openDialog(title,url,width,height) {
+		$('#oaDialog').dialog({
+		    title: title,
+		    modal:true,
+		    height: height,
+		    width:width,
+		    shadow:false
+		   
+		});
+		 
+		$('#oaDialog').dialog('refresh', url);
+		$('#oaDialog').dialog('open');
+		$('#oaDialog').dialog('center');
+		$("#oaDialog").panel("move",{top:$(document).scrollTop() + $(window).height() * 0.25});  
+	}
+	function closeDialog() {
+    	$('#oaDialog').dialog('close');
+    	/* window.location.reload(); */ 
+    	//parent.parent.tabRefresh();
+	} 
 </script>
 
 </head>
@@ -225,7 +243,7 @@
         </div>
 
     </div>
-    <div  data-options="region:'center',title:'',tools:'#tab-tools'">
+    <div id="center" data-options="region:'center',title:'',tools:'#tab-tools'">
         <div id="tabs" class="easyui-tabs" style="width: 100%;height: 100%">
             <div title="待办事项" style="padding:10px;">
 
@@ -235,9 +253,12 @@
                 <iframe scrolling="yes" frameborder="0"  src="http://www.jeasyui.com/forum/index.php" style="width:100%;height:100%;"></iframe>
             </div> -->
         </div>
+        
     </div>
    <!--  <div data-options="region:'south'" style="height:50px; padding:10px;">south region</div> -->
-
+	<div id="oaDialog" title="dialog" class="easyui-dialog"  style="width:auto;height:auto; text-align:center;overflow: hidden;"
+	            data-options="resizable:true,modal:false,closed:true"  >
+	</div>
 </body>
 
 </html>

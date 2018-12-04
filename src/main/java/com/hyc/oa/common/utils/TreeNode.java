@@ -17,10 +17,12 @@ public class TreeNode {
     
     private boolean open;
     
+    private String parentId;
+    
     
     private Attributes attributes;
     
-    private List<TreeNode> children = new ArrayList<TreeNode>();
+    private List<TreeNode> children ;
 	public String getId() {
 		return id;
 	}
@@ -69,6 +71,12 @@ public class TreeNode {
 	}
 	public void setText(String text) {
 		this.text = text;
+	}
+	public String getParentId() {
+		return parentId;
+	}
+	public void setParentId(String parentId) {
+		this.parentId = parentId;
 	}
 	
     

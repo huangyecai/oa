@@ -185,7 +185,7 @@ public class MenuController {
     }
 
     @RequestMapping("system/menu/menuTree")
-    private  void menuTree  (Menu entity,HttpServletRequest request){
+    public  void menuTree  (Menu entity,HttpServletRequest request){
     	Menu menu = new Menu();
     	menu.setStatus(1);
     	List<Menu> list = menuService.list(menu);

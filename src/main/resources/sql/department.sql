@@ -11,6 +11,6 @@ CREATE TABLE `department` (
   `create_date` datetime DEFAULT NULL COMMENT '创建时间',
   `create_by` varchar(64) DEFAULT NULL COMMENT '创建者',
   `update_date` datetime DEFAULT NULL COMMENT '更新时间',
-  `update_by` varchar(64) NOT NULL COMMENT '更新者',
+  `update_by` varchar(64)  NULL COMMENT '更新者',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
