@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>角色管理</title>
+	<link th:href="@{../../jquery-easyui-1.6.6/themes/default/easyui.css}" href="../../../static/jquery-easyui-1.6.6/themes/default/easyui.css" rel="stylesheet" type="text/css">
+    <link th:href="@{../../jquery-easyui-1.6.6/themes/icon.css}" href="../../../static/jquery-easyui-1.6.6/themes/icon.css" rel="stylesheet" type="text/css">
+    <script th:src="@{../../jquery-easyui-1.6.6/jquery.min.js}" src="../../../static/jquery-easyui-1.6.6/jquery.min.js" type="text/javascript"></script>
+    <script th:src="@{../../jquery-easyui-1.6.6/jquery.easyui.min.js }" src="../../../static/jquery-easyui-1.6.6/jquery.easyui.min.js" type="text/javascript"></script>
+    <script th:src="@{../../jquery-easyui-1.6.6/locale/easyui-lang-zh_CN.js }" src="../../../static/jquery-easyui-1.6.6/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
+	<style type="text/css">
+	.datagrid-header-inner{
+	width: 100%
+	}
+	.datagrid-view2 table{
+	width: 100%
+	}
+	</style>
+</head>
+<body>
+	<div class="easyui-panel" style="width:100%;height: 100%;" data-options="fit:true" >
+		<table style="width: 100%;height: 100%;border: 0;">
+			<tr>
+				<td>
+					<div id="tb" style="padding:5px;height:auto">
+						<div style="margin-bottom:5px">
+							<a href="javascript:void(0);" th:onclick="'parent.openDialog(\'添加角色\',\'role/form\',400,\'\')'" class="easyui-linkbutton" iconCls="icon-add" plain="true"></a>
+							<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true"></a>
+							<a href="#" class="easyui-linkbutton" iconCls="icon-save" plain="true"></a>
+							<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true"></a>
+							<a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true"></a>
+						</div>
+						<div>
+							<form id="searchForm" action="list" method="post">
+								<input name="id" type="hidden" th:value="${param.id}">
+								名称：
+								<input name="name" th:value="${param.name}" class="easyui-textbox" style="width:100px;height:32px">
+								说明：<input name="description" th:value="${param.description}" class="easyui-textbox" style="width:100px;height:32px">
+								编码：<input name="code" th:value="${param.code}" class="easyui-textbox" style="width:100px;height:32px">
+								等级：<input name="level" th:value="${param.level}" class="easyui-textbox" style="width:100px;height:32px">
+								类型：<input name="type" th:value="${param.type}" class="easyui-textbox" style="width:100px;height:32px">
+								<a href="#" class="easyui-linkbutton" onclick="$('#searchForm').submit();" iconCls="icon-search">Search</a>
+							</form>
+						</div>
+					</div>
+					<table title="角色管理" class="easyui-datagrid" fitColumns="true" style="width:100%;height:100%" singleSelect="true" rownumbers="true" toolbar='#tb'>
+						<thead>
+							<tr style="width: 100%">
+								<th field="name">名称</th>
+								<th field="description">说明</th>
+								<th field="code">编码</th>
+								<th field="level">等级</th>
+								<th field="type">类型</th>
+								<th field="status">状态</th>
+								<th field="操作">操作</th>
+							</tr>
+						</thead>
+						<tbody>
+							<th:block th:each="entity:${page.result}">
+								<tr>
+									<td th:text="${entity.name}"></td>
+									<td th:text="${entity.description}"></td>
+									<td th:text="${entity.code}"></td>
+									<td th:text="${entity.level}"></td>
+									<td th:text="${entity.type}"></td>
+									<td th:text="${entity.status}"></td>
+									<td >
+										<a href="#" class="easyui-linkbutton" th:onclick="'parent.openDialog(\'添加角色\',\'role/form?id=' + ${entity.id} +'\',400,\'\')'">编辑</a>
+										<a href="#" class="easyui-linkbutton" th:onclick="'parent.del(\'role/delete?id='+${ entity.id}+'\')'">删除</a>
+										<a href="#" class="easyui-linkbutton" th:onclick="'parent.openDialog(\'详情\',\'role/detail?id=' + ${entity.id} +'\',400,\'\')'">详情</a>
+									</td>
+								</tr>
+							</th:block>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td height="36px">
+					<div id="dataTablePagination" class="easyui-pagination" style="border:1px solid #ccc;" pagePosition="bottom" th:attr="data-options='pageNumber:'+${page.pageNum}+',total:'+${page.total}+',pageSize:'+${page.pageSize}+',onSelectPage:selectPage'">
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<script type="text/javascript">
+		function selectPage(pageNumber, pageSize){
+			window.location.href=window.location.pathname+'?pageNumber='+pageNumber+'&pageSize='+pageSize+'&'+$("form").serialize();
+		}
+	</script>
+</body>
+</html>

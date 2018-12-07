@@ -1,20 +1,21 @@
 package com.hyc.oa.modules.role.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import com.hyc.oa.modules.role.entity.Role;
 
 @Mapper
 public interface RoleDao {
-    int deleteByPrimaryKey(String id);
+    int delete(String id);
 
-    int insert(Role record);
+    int insert(Role entity);
 
-    int insertSelective(Role record);
+    int update(Role entity);
 
-    Role selectByPrimaryKey(String id);
+	List<Role> list(Role entity);
 
-    int updateByPrimaryKeySelective(Role record);
+	Role get(String id);
 
-    int updateByPrimaryKey(Role record);
 }

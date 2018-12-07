@@ -124,6 +124,32 @@
     	/* window.location.reload(); */ 
     	//parent.parent.tabRefresh();
 	} 
+	function del(url) {
+		$.messager.confirm('删除提示', '你确定要删除该项吗?', function(r){
+			if (r){
+				$.ajax({
+					url:url,
+					type:"POST",
+					dataType:"json",
+					success: function(data){
+						if (data.status == 200 || data.status == "200") {
+							$.messager.alert('删除结果','删除成功！','warning',function(){});
+							tabRefresh();
+							return true;
+						}else{
+							$.messager.alert('删除结果','删除失败！','error');
+							return false;
+						}
+						
+					},
+				    error:function(){
+				    	$.messager.alert('删除结果','删除失败！','error');
+				    	return false;
+				    }
+				});
+			}
+		});
+	}
 </script>
 
 </head>
