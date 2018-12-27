@@ -60,5 +60,5 @@ public class ConstantUtils {
 	/** 开发java文件的默认路径 */
 	public static final String CLASS_PATH = "src/main/java/";
 	/** 开发mapper文件的默认路径 */
-	public static final String MAPPER_PATH = "src/main/resources/mappe/";
+	public static final String MAPPER_PATH = "src/main/resources/mapper/";
 }
