@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>添加</title>
+    <link th:href="@{../jquery-easyui-1.6.6/themes/default/easyui.css}" href="../../static/jquery-easyui-1.6.6/themes/default/easyui.css" rel="stylesheet" type="text/css">
+    <link th:href="@{../jquery-easyui-1.6.6/themes/icon.css}" href="../../static/jquery-easyui-1.6.6/themes/icon.css" rel="stylesheet" type="text/css">
+    <script th:src="@{../jquery-easyui-1.6.6/jquery.min.js}" src="../../static/jquery-easyui-1.6.6/jquery.min.js" type="text/javascript"></script>
+    <script th:src="@{../jquery-easyui-1.6.6/jquery.easyui.min.js }" src="../../static/jquery-easyui-1.6.6/jquery.easyui.min.js" type="text/javascript"></script>
+	<script th:src="@{../jquery-easyui-1.6.6/locale/easyui-lang-zh_CN.js }" src="../../static/jquery-easyui-1.6.6/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
+	<style type="text/css">
+		.textbox-label { width: auto;}
+	</style>
+	<script type="text/javascript">
+	function callback( deptId,deptName) {
+		  console.log(deptName);
+		$('#organizationId').val(deptId);
+		$('#organizationName').val(deptName);
+		parent.closeDialog();
+	 }
+	  
+		function submitForm(){
+			  $('#mainForm').form('submit',{
+				onSubmit:function(){
+					return $(this).form('enableValidation').form('validate');
+				},
+				success:function(data){
+					var result = $.parseJSON(data); 
+					if (result.status == 200 || result.status == "200") {
+						/* alert("操作成功"); */
+						parent.$.messager.alert("操作提示", "操作成功！", "warning", function () {
+							parent.closeAndOpenTab("员工管理", "user/list");
+				        });
+					}else{
+						parent.oaMsgAlert('警告','操作失败!','error');
+					}
+			    }
+			}); 
+		}
+		function clearForm(){
+			$('#mainForm').form('clear');
+		}
+	</script>
+</head>
+<body>
+  
+<div class="easyui-panel"   >
+		<div style="padding:10px 60px 20px 60px">
+		<th:block th:if="${entity.id} neq '' and ${entity.id} != null"  >
+			 <form id="mainForm"   action="update"    method="post" class="easyui-form">  
+		</th:block>
+		<th:block th:if="${entity.id} eq '' or ${entity.id} == null"  >
+			 <form id="mainForm"   action="create"    method="post" class="easyui-form"> 
+		</th:block>
+	     
+	    	<input name="id" type="hidden" th:value="${entity.id}">
+	    	<input name="status" type="hidden" th:value="${entity.status}">
+	    	<table cellpadding="5">
+	    		<tr>
+	    			<td>姓氏:</td>
+	    			<td><input th:value="${entity.familyName}" class="easyui-validatebox" type="text" name="familyName" data-options="required:true"></input></td>
+	    		</tr>
+	    		<tr>
+	    			<td>名字:</td>
+	    			<td><input th:value="${entity.firstName}" class="easyui-validatebox" type="text" name="firstName" data-options="required:true"></input></td>
+	    		</tr>
+	    		<tr>
+	    			<td>归属部门:</td>
+	    			<td>
+	    				<input th:value="${entity.organizationId}"  type="hidden" id="organizationId" name="organizationId"  ></input>
+	    				<th:block th:if="${entity.organization} != null"  >
+							<input th:value="${entity.organization.name}"  class="easyui-validatebox" type="text" id="organizationName" name="organizationName" data-options="required:true" readonly="readonly"></input>
+						</th:block>
+	    				<th:block th:if="${entity.organization} == null"  >
+							<input  value=""  class="easyui-validatebox" type="text" id="organizationName" name="organizationName" data-options="required:true" readonly="readonly"></input>
+						</th:block>
+	    				<a href="#" class="easyui-linkbutton" onclick="parent.openDialog('选择部门','department/departmentTreeForCallback',400,250)" iconCls="icon-search"></a>
+	    			</td>
+	    		</tr>
+	    		<tr>
+	    			<td>手机:</td>
+	    			<td><input th:value="${entity.mobile}" class="easyui-validatebox" type="text" name="mobile" data-options="required:true" validType="length[11,11]"></input></td>
+	    		</tr>
+	    		<tr>
+	    			<td>用户头像:</td>
+	    			<td><input th:value="${entity.photo}" class="easyui-validatebox" type="text" name="photo" data-options="required:true"></input></td>
+	    		</tr>
+	    		<tr>
+	    			<td>性别:</td>
+	    			<td style="width: auto;">
+						<th:block th:if="${entity.sex} == 0"  >
+							<input class="easyui-radiobutton" name="sex" value="0" label="女" checked=true>
+							<input class="easyui-radiobutton" name="sex" value="1" label="男"  >
+						</th:block>
+						<th:block th:if="${entity.sex} == 1"  >
+							<input class="easyui-radiobutton" name="sex" value="0" label="女" >
+							<input class="easyui-radiobutton" name="sex" value="1" label="男" checked=true >
+						</th:block>
+					</td>
+	    		</tr>
+	    		<tr>
+	    			<td>邮箱:</td>
+	    			<td><input th:value="${entity.email}" class="easyui-validatebox" type="text" name="email" data-options="required:true" validType="email"></input></td>
+	    		</tr>
+	    		<tr>
+	    			<td>微信账号:</td>
+	    			<td><input th:value="${entity.weixin}" class="easyui-validatebox" type="text" name="weixin" data-options="required:true"></input></td>
+	    		</tr>
+	    		<tr>
+	    			<td>qq账号:</td>
+	    			<td><input th:value="${entity.qq}" class="easyui-validatebox" type="text" name="qq" data-options="required:true"></input></td>
+	    		</tr>
+	    		<tr>
+	    			<td>办公地址:</td>
+	    			<td><input th:value="${entity.officeAddress}" class="easyui-validatebox" type="text" name="officeAddress" data-options="required:true"></input></td>
+	    		</tr>
+	    		<tr>
+	    			<td>职位:</td>
+	    			<td><input th:value="${entity.job}" class="easyui-validatebox" type="text" name="job" data-options="required:true"></input></td>
+	    		</tr>
+	    		<tr>
+	    			<td>工号:</td>
+	    			<td><input th:value="${entity.jobNumber}" class="easyui-validatebox" type="text" name="jobNumber" data-options="required:true"></input></td>
+	    		</tr>
+	    		<tr>
+	    			<td>学历:</td>
+	    			<td><input th:value="${entity.education}" class="easyui-validatebox" type="text" name="education" data-options="required:true"></input></td>
+	    		</tr>
+	    		<tr>
+	    			<td>毕业学校:</td>
+	    			<td><input th:value="${entity.school}" class="easyui-validatebox" type="text" name="school" data-options="required:true"></input></td>
+	    		</tr>
+	    		<tr>
+	    			<td>专业:</td>
+	    			<td><input th:value="${entity.major}" class="easyui-validatebox" type="text" name="major" data-options="required:true"></input></td>
+	    		</tr>
+	    		<tr>
+	    			<td>毕业日期:</td>
+	    			<td><input th:value="${entity.graduationDate}" class="easyui-datebox" name="graduationDate" data-options="required:true," validType="date"  formatter="yyyy-MM-dd" panelWidth="173px" panelHeight="200px"></td>
+	    		</tr>
+	    		<tr>
+	    			<td>籍贯:</td>
+	    			<td><input th:value="${entity.natives}" class="easyui-validatebox" type="text" name="natives" data-options="required:true"></input></td>
+	    		</tr>
+	    		<tr>
+	    			<td>民族:</td>
+	    			<td><input th:value="${entity.nation}" class="easyui-validatebox" type="text" name="nation" data-options="required:true"></input></td>
+	    		</tr>
+	    		<tr>
+	    			<td>身份证号:</td>
+	    			<td><input th:value="${entity.identity}" class="easyui-validatebox" type="text" name="identity" data-options="required:true"></input></td>
+	    		</tr>
+	    		<tr>
+	    			<td>护照号码:</td>
+	    			<td><input th:value="${entity.passport}" class="easyui-validatebox" type="text" name="passport" data-options="required:true"></input></td>
+	    		</tr>
+	    		<tr>
+	    			<td>社保号码:</td>
+	    			<td><input th:value="${entity.social}" class="easyui-validatebox" type="text" name="social" data-options="required:true" ></input></td>
+	    		</tr>
+	    		<tr>
+	    			<td>银行账号:</td>
+	    			<td><input th:value="${entity.bankAccount}" class="easyui-validatebox" type="text" name="bankAccount" data-options="required:true"></input></td>
+	    		</tr>
+	    		<tr>
+	    			<td>生日:</td>
+	    			<td><input th:value="${entity.birthday}" class="easyui-datebox" name="birthday" data-options="required:true,"  formatter="yyyy-MM-dd" panelWidth="173px" panelHeight="200px"></td>
+	    		</tr>
+	    		<tr>
+	    			<td>婚姻状况:</td>
+	    			<td><input th:value="${entity.marriage}" class="easyui-validatebox" type="text" name="marriage" data-options="required:true"></input></td>
+	    		</tr>
+	    		<tr>
+	    			<td>家庭住址:</td>
+	    			<td><input th:value="${entity.address}" class="easyui-validatebox" type="text" name="address" data-options="required:true"></input></td>
+	    		</tr>
+	    		<tr>
+	    			<td>紧急联系人:</td>
+	    			<td><input th:value="${entity.emergencyContact}" class="easyui-validatebox" type="text" name="emergencyContact" data-options="required:true"></input></td>
+	    		</tr>
+	    		<tr>
+	    			<td>紧急联系电话:</td>
+	    			<td><input th:value="${entity.emergencyPhone}" class="easyui-validatebox" type="text" name="emergencyPhone" data-options="required:true"></input></td>
+	    		</tr>
+	    		<tr>
+	    			<td>联系人列表及信息:</td>
+	    			<td><input th:value="${entity.linkList}" class="easyui-validatebox" type="text" name="linkList" data-options="required:true"></input></td>
+	    		</tr>
+	    		<tr>
+	    			<td>座机:</td>
+	    			<td><input th:value="${entity.telPhone}" class="easyui-validatebox" type="text" name="telPhone" data-options="required:true"></input></td>
+	    		</tr>
+	    	</table>
+	    </form>
+	    <div style="text-align:center;padding:5px">
+	    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()">提交</a>
+	    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">清空</a>
+ 	    	<a href="javascript:void(0)" id="colesssss" class="easyui-linkbutton" onclick="parent.closeTab();">关闭</a>
+	    </div>
+	    </div>
+	</div>
+</body>
+</html>

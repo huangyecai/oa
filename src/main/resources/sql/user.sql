@@ -25,7 +25,7 @@ CREATE TABLE `user`  (
   `id` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `family_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '姓氏',
   `first_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '名字',
-  --`full_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '全名',
+  -- `full_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '全名',
   `enterprise_id` varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '企业id(租户)',
   `organization_id` varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '归属部门',
   `mobile` varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '显示手机',
@@ -59,6 +59,7 @@ CREATE TABLE `user`  (
   `update_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '更新者',
   `update_date` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
   `is_upload` tinyint(1) NULL DEFAULT NULL COMMENT '是否已上传过头像，0：未上传，1：已上传',
+  `status` tinyint(1) DEFAULT NULL COMMENT '状态 1启用 2禁用3弃用',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户信息表' ROW_FORMAT = Dynamic;
 

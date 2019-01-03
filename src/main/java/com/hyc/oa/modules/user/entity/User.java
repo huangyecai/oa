@@ -1,6 +1,9 @@
 package com.hyc.oa.modules.user.entity;
 
 import com.hyc.oa.common.base.entity.BaseEntity;
+import com.hyc.oa.modules.department.entity.Department;
+
+import org.apache.catalina.core.ApplicationContext;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.Date;
@@ -189,6 +192,9 @@ public class User extends BaseEntity<User> {
 	 * 登陆时间
 	 */
 	private Date loginDate;
+	
+	
+	 
 
 	/**
 	 * 密码
@@ -858,4 +864,23 @@ public class User extends BaseEntity<User> {
 	public void setTelephone(String telephone) {
 		this.telephone = telephone;
 	}
+
+	 
+
+	public void setLoginIP(String loginIP) {
+		this.loginIP = loginIP;
+	}
+	
+	/** 部门 **/
+	private transient Department organization;
+
+	public Department getOrganization() {
+		return organization;
+	}
+
+	public void setOrganization(Department organization) {
+		this.organization = organization;
+	}
+	
+	
 }

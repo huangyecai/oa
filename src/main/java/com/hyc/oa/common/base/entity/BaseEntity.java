@@ -40,7 +40,7 @@ public abstract class BaseEntity<T> implements Serializable {
 	/**
 	 * 删除标记（0：正常；1：删除）
 	 */
-	private Integer status;
+	private int status;
 
 	public String getId() {
 		return id;
@@ -92,7 +92,7 @@ public abstract class BaseEntity<T> implements Serializable {
 
 	 
 
-	public Integer getStatus() {
+	public int getStatus() {
 		return status;
 	}
 

@@ -7,7 +7,15 @@
     <link th:href="@{jquery-easyui-1.6.6/themes/icon.css}" href="../static/jquery-easyui-1.6.6/themes/icon.css" rel="stylesheet" type="text/css">
     <script th:src="@{jquery-easyui-1.6.6/jquery.min.js}" src="../static/jquery-easyui-1.6.6/jquery.min.js" type="text/javascript"></script>
     <script th:src="@{jquery-easyui-1.6.6/jquery.easyui.min.js }" src="../static/jquery-easyui-1.6.6/jquery.easyui.min.js" type="text/javascript"></script>
+	<script th:src="@{jquery-easyui-1.6.6/locale/easyui-lang-zh_CN.js }" src="../static/jquery-easyui-1.6.6/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
 	<script  th:src="@{jquery-easyui-1.6.6/jquery.cookie.js}" type="text/javascript" src="../static/jquery-easyui-1.6.6/jquery.cookie.js"></script>
+    <!-- ztree -->
+	<link rel="stylesheet" th:href="@{zTree_v3/css/demo.css}" href="../static/zTree_v3/css/demo.css" type="text/css">
+	<link rel="stylesheet" th:href="@{zTree_v3/css/zTreeStyle/zTreeStyle.css}" href="../../../static/zTree_v3/css/zTreeStyle/zTreeStyle.css" type="text/css">
+	<!-- <script type="text/javascript" src="../../../static/zTree_v3/js/jquery-1.4.4.min.js"></script> -->
+	<script type="text/javascript" th:src="@{zTree_v3/js/jquery.ztree.core.js }" src="../static/zTree_v3/js/jquery.ztree.core.js"></script>
+	<script type="text/javascript" th:src="@{zTree_v3/js/jquery.ztree.excheck.js }" src="../static/zTree_v3/js/jquery.ztree.excheck.js"></script>
+	<script type="text/javascript" th:src="@{zTree_v3/js/jquery.ztree.exedit.js }" src="../static/zTree_v3/js/jquery.ztree.exedit.js"></script>
     <style type="text/css">
         #header {height:70px;overflow:hidden;}
         #header .logo {display:block;margin:5px;height:60px;}
@@ -15,6 +23,16 @@
         #header .top-btns span {vertical-align:middle;}
         #header .top-btns .easyui-combobox {width:80px;}
     </style>
+    <style type="text/css">
+		div#rMenu {position:absolute; visibility:hidden; top:0; background-color: #555;text-align: left;padding: 2px;}
+		div#rMenu ul li{
+			margin: 1px 0;
+			padding: 0 5px;
+			cursor: pointer;
+			list-style: none outside none;
+			background-color: #DFDFDF;
+		}
+	</style>
 <script th:inline="javascript" type="text/javascript" >
 	/**
 	 * easyUI更换主题的方法
@@ -45,23 +63,35 @@
 	}
 	/* 动态添加Tab */
 	function addTab(title, url){
-	    if ($('#tabs').tabs('exists', title)){
-	        $('#tabs').tabs('select', title);
-	        tabRefresh();
-	    } else {
-	        var content = '<iframe scrolling="auto" frameborder="0"  src="'+url+'" style="width:100%;height:100%;"></iframe>';
-	        $('#tabs').tabs('add',{
-	            title:title,
-	            content:content,
-	            closable:true
-	        });
-	    }
+		 var content = '<iframe scrolling="auto" frameborder="0"  src="'+url+'" style="width:100%;height:100%;"></iframe>';
+		    if ($('#tabs').tabs('exists', title)){
+		        $('#tabs').tabs('select', title);
+		       
+		        var currentTab = $('#tabs').tabs('getSelected');
+			    $('#tabs').tabs('update', {
+			        tab: currentTab,
+			        options: {
+			        	 content: content,
+			        	 closable:true
+			        }
+			    });
+			   
+		    } else {
+		        $('#tabs').tabs('add',{
+		            title:title,
+		            content:content,
+		            closable:true
+		        });
+		    }
 	}
+	
+	 
 	//刷新当前标签Tabs
 	function tabRefresh() {
 	 var currentTab = $('#tabs').tabs('getSelected');
 	    RefreshTab(currentTab);
 	}
+	 
 	function RefreshTab(currentTab) {
 	    var url = $(currentTab.panel('options')).attr('href');
 	    $('#tabs').tabs('update', {
@@ -150,6 +180,94 @@
 			}
 		});
 	}
+	
+	function oaAjaxConfirm( msg , url){
+		$.messager.confirm('提示', '你确认'+ msg + '吗！', function(r){
+			 if (r) {
+				 $.ajax({
+						url:url,
+						type:"POST",
+						dataType:"json",
+						success: function(data){
+							if (data.status == 200 || data.status == "200") {
+								$.messager.alert( msg + '结果', msg + '成功！','warning',function(){});
+								tabRefresh();
+								return true;
+							}else{
+								$.messager.alert( msg + '结果', msg + '失败！','error');
+								return false;
+							}
+							
+						},
+					    error:function(){
+					    	$.messager.alert( msg + '结果', msg + '失败！','error');
+					    	return false;
+					    }
+					});
+			}
+		});
+	}
+	
+	function oaMsgAlert(msg,type) {
+		$.messager.alert( msg,type);
+	}
+	//关闭和刷新tab页面
+	CloseRefreshExcuteTab = function (callback) {
+
+		var tab = $('#tabs').tabs('getSelected');
+		console.log(tab.panel('options').content);
+        //关闭当前tab页
+         closeTab();
+        if(callback != null && callback !=''){
+            if ($('#tabs').tabs('exists', callback)){
+     	        $('#tabs').tabs('select', callback);
+     	     //刷新当前页
+     	        tabRefresh();
+     	    }
+        }
+		
+        /* //获取当前tab页id
+         var currTab = $('#tabs').tabs('getSelected');
+         var id = currTab.panel('options').id;
+         var tabs = $('#tabs').tabs('tabs');
+         var isExists = false;
+         var title2 = '';
+         for (var i = 0; i < tabs.length; i++) {
+             if (tabs[i].panel('options').id == id) {
+                 isExists = true;
+                 title2 = tabs[i].panel('options').title;
+                 break;
+             }
+         }
+         if (isExists) {
+             $('#tabs').tabs("select", title2);
+         }
+         else {
+             $('#tabs').tabs("select", '欢迎使用');
+         }
+         var currTab2 = $('#tabs').tabs('getSelected');
+         var ssrc = $(currTab2.panel('options').content)[0].src;
+         for (i = 0; i < window.frames.length; i++) {
+             var aa = window.frames[i].location.href;
+             if (ssrc == aa || (ssrc + '#') == (aa)) {
+                 var f = 'frames[i].frameElement.contentWindow.' + callback+'()';
+                 eval(f);
+             }
+         } */
+    
+     }
+
+     closeTab = function () {
+         var index = $('#tabs').tabs('getTabIndex', $('#tabs').tabs('getSelected'));
+         if (index != 0) {
+             $('#tabs').tabs('close', index);
+         }
+
+     }
+     closeAndOpenTab = function ( title , url ) {
+    	 closeTab();
+    	 addTab( title , url );
+	}
 </script>
 
 </head>
@@ -161,12 +279,12 @@
             <span>欢迎您，管理员</span>
             <a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-lock'">修改密码</a>
             <a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-clear'">退出系统</a>
-            <select class="easyui-combobox" data-options="editable:false">
+           <!--  <select class="easyui-combobox" data-options="editable:false">
                 <option value="0" selected="selected">中文</option>
                 <option value="1">English</option>
-            </select>
-            <a href="#" class="easyui-menubutton" menu="#mm2" iconCls="icon-help">Help</a>
-            <a href="#" class="easyui-menubutton" menu="#mm1" iconCls="icon-edit">Edit</a>
+            </select> -->
+            <a href="#" class="easyui-menubutton" menu="#mm2" iconCls="icon-help">主题</a>
+           <!--  <a href="#" class="easyui-menubutton" menu="#mm1" iconCls="icon-edit">Edit</a>
 
             <div id="mm1" style="width:150px;">
                 <div iconCls="icon-undo">Undo</div>
@@ -178,7 +296,7 @@
                 <div class="menu-sep"></div>
                 <div iconCls="icon-remove">Delete</div>
                 <div>Select All</div>
-            </div>
+            </div> -->
             <div id="mm2" style="width:100px;">
                 <div onclick="changeTheme('default')">默认主题</div>
                 <div onclick="changeTheme('black')">黑色主题</div>
@@ -195,76 +313,8 @@
     <div data-options="region:'west',split:true,title:'主菜单'"  style="width:200px;">
         <div id="easy_menu_accordion" class="easyui-accordion" style="height: 100%">
             <div title="个人中心"  data-options="iconCls:'icon-ok'" style="overflow:auto;">
-
                 <ul id="easy_menu_1" class="easyui-tree">
-                    <li >
-                        <span onclick="addTab('baidu','https://www.baidu.com/')">Friend</span>
-                    </li>
-                    <li  >
-                        <span data-options="url:'get_data.php'"><a href="https://www.baidu.com/">百度</a></span>
-
-                    </li>
-                    <li data-options="attributes:{'url':'https://www.baidu.com/'}">
-                        <span>Company</span>
-                    </li>
-                    <li>
-                        <span>My Documents</span>
-                        <ul>
-                            <li data-options="state:'closed'">
-                                <span>Photos</span>
-                                <ul>
-                                    <li>
-                                        <span>Friend</span>
-                                    </li>
-                                    <li>
-                                        <span>Wife</span>
-                                    </li>
-                                    <li>
-                                        <span>Company</span>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
                 </ul>
-
-            </div>
-
-            <!--/*@thymesVar id="nemuList" type="com.hyc.oa.common.utils.TreeNode"*/-->
-			 <th:block th:each="m : ${nemuList}">
-
-                 <div th:title="${m.text}"   style="padding:10px">
-                     <ul class="easyui-tree"   >
-
-                     </ul>
-                 </div>
-			  </th:block>
-
-
-            <div title="系统设置" data-options="iconCls:'icon-help'" style="padding:10px;">
-
-
-                    <ul id="easy_menu_2" class="easyui-tree">
-                        <li data-options="attributes:{'url':'system/menu/list'}">
-                            <span >菜单管理</span>
-                        </li>
-                        <li data-options="attributes:{'url':'system/menu/menuTree'}">
-                            <span >菜单管理1</span>
-
-                        </li>
-                        <li data-options="attributes:{'url':'system/menu/menuTree?name=2'}">
-                            <span >菜单管理2</span>
-
-                        </li>
-                        <li data-options="attributes:{'url':'https://www.baidu.com/'}">
-                            <span>百度</span>
-                        </li>
-
-                    </ul>
-
-
-            </div>
-            <div title="Ajax" data-options="href:'_content.html'" style="padding:10px">
             </div>
         </div>
 
@@ -272,12 +322,7 @@
     <div id="center" data-options="region:'center',title:'',tools:'#tab-tools'">
         <div id="tabs" class="easyui-tabs" style="width: 100%;height: 100%">
             <div title="待办事项" style="padding:10px;">
-
             </div>
-            <div title="Ajax" data-options="href:'https://www.baidu.com/',closable:true" style="padding:10px"></div>
-            <!-- <div title="Iframe" data-options="closable:true" style="overflow:hidden">
-                <iframe scrolling="yes" frameborder="0"  src="http://www.jeasyui.com/forum/index.php" style="width:100%;height:100%;"></iframe>
-            </div> -->
         </div>
         
     </div>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>管理</title>
+	<link th:href="@{../../jquery-easyui-1.6.6/themes/default/easyui.css}" href="../../../static/jquery-easyui-1.6.6/themes/default/easyui.css" rel="stylesheet" type="text/css">
+    <link th:href="@{../../jquery-easyui-1.6.6/themes/icon.css}" href="../../../static/jquery-easyui-1.6.6/themes/icon.css" rel="stylesheet" type="text/css">
+    <script th:src="@{../../jquery-easyui-1.6.6/jquery.min.js}" src="../../../static/jquery-easyui-1.6.6/jquery.min.js" type="text/javascript"></script>
+    <script th:src="@{../../jquery-easyui-1.6.6/jquery.easyui.min.js }" src="../../../static/jquery-easyui-1.6.6/jquery.easyui.min.js" type="text/javascript"></script>
+    <script th:src="@{../../jquery-easyui-1.6.6/locale/easyui-lang-zh_CN.js }" src="../../../static/jquery-easyui-1.6.6/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
+	<style type="text/css">
+	.datagrid-header-inner{
+	width: 100%
+	}
+	.datagrid-view2 table{
+	width: 100%
+	}
+	</style>
+</head>
+<body>
+	<div class="easyui-panel" style="width:100%;height: 100%;" data-options="fit:true" >
+		<table style="width: 100%;height: 100%;border: 0;">
+			<tr>
+				<td>
+					<div id="tb" style="padding:5px;height:auto">
+						<div>
+							<form id="searchForm" action="list" method="post">
+								<div style="margin: 10px;display: inline-block;">姓氏：<input name="familyName" th:value="${param.familyName}" class="easyui-textbox" style="width:100px;height:30px"></div>
+								<div style="margin: 10px;display: inline-block;">名字：<input name="firstName" th:value="${param.firstName}" class="easyui-textbox" style="width:100px;height:30px;"></div>
+								<div style="margin: 10px;display: inline-block;">部门：<input name="organizationId" th:value="${param.organizationId}" class="easyui-textbox" style="width:100px;height:30px"></div>
+								<div style="margin: 10px;display: inline-block;">显示手机：<input name="mobile" th:value="${param.mobile}" class="easyui-textbox" style="width:100px;height:30px"></div>
+								<div style="margin: 10px;display: inline-block;">职位：<input name="job" th:value="${param.job}" class="easyui-textbox" style="width:100px;height:30px"></div>
+								<div style="margin: 10px;display: inline-block;">工号：<input name="jobNumber" th:value="${param.jobNumber}" class="easyui-textbox" style="width:100px;height:30px"></div>
+								<div style="margin: 10px;display: inline-block;">籍贯：<input name="natives" th:value="${param.natives}" class="easyui-textbox" style="width:100px;height:30px"></div>
+								<div style="margin: 10px;display: inline-block;">民族：<input name="nation" th:value="${param.nation}" class="easyui-textbox" style="width:100px;height:30px"></div>
+								<div style="margin: 10px;display: inline-block;">身份证号：<input name="identity" th:value="${param.identity}" class="easyui-textbox" style="width:100px;height:30px"></div>
+								<div style="margin: 10px;display: inline-block;">状态：
+									<select class="easyui-combobox" data-options="onLoadSuccess:delStatus"  name="status" style="width:100px;">
+									    <option value="0">全部</option>
+									    <option value="1">有效</option>
+									    <option value="2">禁用</option>
+									    <option value="3">无效</option>
+									</select>
+								</div>
+								<div style="margin: 10px;display: inline-block;"><a href="#" class="easyui-linkbutton" onclick="$('#searchForm').submit();" iconCls="icon-search">搜索</a></div>
+							</form>
+						</div>
+					</div>
+					<table title="用户管理" class="easyui-datagrid" fitColumns="true" style="width:100%;height:100%" singleSelect="true" rownumbers="true" toolbar='#tb'>
+						<thead>
+							<tr style="width: 100%">
+								<th field="familyName">姓氏</th>
+								<th field="firstName">名字</th>
+								<th field="organizationId">部门</th>
+								<th field="mobile">手机</th>
+								<th field="sex">性别</th>
+								<th field="email">邮箱</th>
+								<th field="weixin">微信账号</th>
+								<th field="qq">qq账号</th>
+								<th field="officeAddress">办公地址</th>
+								<th field="job">职位</th>
+								<th field="jobNumber">工号</th>
+								<th field="education">学历</th>
+								<th field="school">毕业学校</th>
+								<th field="major">专业</th>
+								<th field="graduationDate">毕业日期</th>
+								<th field="natives">籍贯</th>
+								<th field="nation">民族</th>
+								<th field="identity">身份证号</th>
+								<th field="passport">护照号码</th>
+								<th field="social">社保号码</th>
+								<th field="bankAccount">银行账号</th>
+								<th field="birthday">生日</th>
+								<th field="marriage">婚姻状况</th>
+								<th field="address">家庭住址</th>
+								<th field="emergencyContact">紧急联系人</th>
+								<th field="emergencyPhone">紧急联系电话</th>
+								<th field="linkList">联系人列表及信息</th>
+								<th field="telPhone">座机</th>
+								<th field="status">状态</th>
+								<th field="操作">操作</th>
+							</tr>
+						</thead>
+						<tbody>
+							<th:block th:each="entity:${page.result}">
+								<tr>
+									<td th:text="${entity.familyName}"></td>
+									<td th:text="${entity.firstName}"></td>
+									<td >
+										<th:block th:if="${entity.organization} != null"  >
+											<th:block th:text="${entity.organization.name}"  >
+											</th:block>
+										</th:block>
+									</td>
+									<td th:text="${entity.mobile}"></td>
+									<td th:switch="${entity.sex}">
+								        <th:block th:case="0">女</th:block>
+								        <th:block th:case="1">男</th:block>
+									</td>
+									<td th:text="${entity.email}"></td>
+									<td th:text="${entity.weixin}"></td>
+									<td th:text="${entity.qq}"></td>
+									<td th:text="${entity.officeAddress}"></td>
+									<td th:text="${entity.job}"></td>
+									<td th:text="${entity.jobNumber}"></td>
+									<td th:text="${entity.education}"></td>
+									<td th:text="${entity.school}"></td>
+									<td th:text="${entity.major}"></td>
+									<td th:text="${entity.graduationDate}"></td>
+									<td th:text="${entity.natives}"></td>
+									<td th:text="${entity.nation}"></td>
+									<td th:text="${entity.identity}"></td>
+									<td th:text="${entity.passport}"></td>
+									<td th:text="${entity.social}"></td>
+									<td th:text="${entity.bankAccount}"></td>
+									<td th:text="${#dates.format(entity.birthday, 'yyyy-MM-dd')}"></td>
+									<td th:text="${entity.marriage}"></td>
+									<td th:text="${entity.address}"></td>
+									<td th:text="${entity.emergencyContact}"></td>
+									<td th:text="${entity.emergencyPhone}"></td>
+									<td th:text="${entity.linkList}"></td>
+									<td th:text="${entity.telPhone}"></td>
+									<td th:switch="${entity.status}">
+								        <th:block th:case="1">正常</th:block>
+								        <th:block th:case="2">禁用</th:block>
+								        <th:block th:case="3"><font color='red'>无效</font></th:block>
+									</td>
+									<td >
+										<input type="hidden" th:value="${entity.id}">
+										<a href="#" class="easyui-linkbutton" th:onclick="'parent.addTab(\'编辑用户信息\',\'user/form?id=' + ${entity.id} +'\')'">编辑</a>
+										<th:block th:if="${entity.status == 1}"  >
+											<a href="#" class="easyui-linkbutton" th:onclick="'parent.del(\'user/forbid?id='+${ entity.id}+'\')'">禁用</a>
+										</th:block>
+										<th:block th:if="${entity.status == 2}"  >
+											<a href="#" class="easyui-linkbutton" th:onclick="'parent.del(\'user/enable?id='+${ entity.id}+'\')'">启用</a>
+										</th:block>
+										<th:block th:if="${entity.status < 3}"  >
+											<a href="#" class="easyui-linkbutton" th:onclick="'parent.del(\'user/delete?id='+${ entity.id}+'\')'">删除</a>
+										</th:block>
+										<a href="#" class="easyui-linkbutton" th:onclick="'parent.addTab(\'用户详情\',\'user/detail?id=' + ${entity.id} +'\')'">详情</a>
+									</td>
+								</tr>
+							</th:block>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td height="36px">
+					<div id="dataTablePagination" class="easyui-pagination" style="border:1px solid #ccc;" pagePosition="bottom" th:attr="data-options='pageNumber:'+${page.pageNum}+',total:'+${page.total}+',pageSize:'+${page.pageSize}+',onSelectPage:selectPage'">
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<script type="text/javascript" th:inline="javascript" >
+		function selectPage(pageNumber, pageSize){
+			window.location.href=window.location.pathname+'?pageNumber='+pageNumber+'&pageSize='+pageSize+'&'+$("form").serialize();
+		}
+		function delStatus() {
+			$(this).combobox("setValue",[[${status == null ? 0:status}]]);
+		}
+	</script>
+</body>
+</html>

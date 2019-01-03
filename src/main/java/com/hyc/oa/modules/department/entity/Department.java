@@ -20,7 +20,6 @@ public class Department extends BaseEntity<Department>{
 
     private String parentIds;
 
-    private Integer status;
 
     private String remark;
 
@@ -74,13 +73,6 @@ public class Department extends BaseEntity<Department>{
         this.parentIds = parentIds == null ? null : parentIds.trim();
     }
 
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
 
     public String getRemark() {
         return remark;

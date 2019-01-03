@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.hyc.oa.common.utils.Attributes;
 import com.hyc.oa.common.utils.TreeNode;
 import com.hyc.oa.common.utils.TreeNodeUtils;
 import com.hyc.oa.modules.department.entity.Department;
@@ -42,6 +43,7 @@ public class DepartmentController {
     private static final String FORM = COMMON+"form";
     private static final String DELETE = COMMON+"delete";
     private static final String DETAIL = COMMON+"detail";
+    private static final String CALLBACK = COMMON+"departmentTreeForCallback";
 	
 	@Autowired
 	private DepartmentService departmentService;
@@ -63,6 +65,28 @@ public class DepartmentController {
 			node.setId(department.getId());
 			node.setName(department.getName());
 			node.setParentId(department.getParentId());
+			deptTree.add(node);
+		}
+		deptTree = TreeNodeUtils.makeTree(deptTree,"");
+		request.setAttribute("list", deptTree);
+	}
+	
+	
+	@RequestMapping(CALLBACK)
+	public void departmentTreeForCallback(Department entity, HttpServletRequest request ) {
+		Department dept = new Department();
+		dept.setStatus(1);
+		List<Department> list = departmentService.list(dept);
+		
+		List<TreeNode> deptTree = new ArrayList<TreeNode>();
+		for (Department department : list) {
+			TreeNode node = new TreeNode();
+			node.setId(department.getId());
+			node.setName(department.getName());
+			node.setParentId(department.getParentId());
+			Attributes attributes = new Attributes();
+			
+			node.setAttributes(attributes);
 			deptTree.add(node);
 		}
 		deptTree = TreeNodeUtils.makeTree(deptTree,"");

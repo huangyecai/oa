@@ -48,8 +48,14 @@ public class ConstantUtils {
 		}
 		return type;
 	}
+	/** 有效 **/
 	public static final int ALIVE = 1;
-	public static final int DEAD = 1;
+	
+	/** 禁止 **/
+	public static final int FORBID = 2;
+	
+	/** 无效 **/
+	public static final int DEAD = 3;
 	
 	/** 开发的项目路径 */
 	public static final String SYSTEM_PATH = System.getProperty("user.dir").replaceAll("\\\\", "/") + "/";

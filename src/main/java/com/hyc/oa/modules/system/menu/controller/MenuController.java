@@ -70,13 +70,13 @@ public class MenuController {
 				}
 			}
     		if (entity.getCreateBy() != null && StringUtils.isNotBlank(entity.getCreateBy().getId())) {
-    			User createBy = userService.getById(entity.getCreateBy().getId());
+    			User createBy = userService.get(entity.getCreateBy().getId());
     			if (createBy != null) {
     				entity.setCreateBy(createBy);
     			}
     		}
     		if (entity.getUpdateBy() != null && StringUtils.isNotBlank(entity.getUpdateBy().getId())) {
-    			User updateBy = userService.getById(entity.getUpdateBy().getId());
+    			User updateBy = userService.get(entity.getUpdateBy().getId());
     			if (updateBy != null) {
     				entity.setUpdateBy(updateBy);
     			}
