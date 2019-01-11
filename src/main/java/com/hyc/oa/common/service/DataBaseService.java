@@ -41,12 +41,12 @@ public class DataBaseService {
 	 * @param packagePath
 	 * @param tableName
 	 */
-	public void makeController(String packagePath,String tableName) {
+	public void makeController( String rootPath , String packagePath,String tableName) {
 		String tableCamelName = this.stringToCamel(tableName);
 		String text = makeControllerStr(packagePath,tableCamelName);
-		String rootPath = ConstantUtils.SYSTEM_PATH  + packagePath.replace(".", "/") +"/" +tableCamelName.toLowerCase() + "/controller" + "/"+this.toUpperCaseFirstOne(tableCamelName)+"Controller.java";
+		String filePath = rootPath+ ConstantUtils.PACKAGE_PATH  + packagePath.replace(".", "/") +"/" +tableCamelName.toLowerCase() + "/controller" + "/"+this.toUpperCaseFirstOne(tableCamelName)+"Controller.java";
 		 
-		Fileutils.write(rootPath,text);
+		Fileutils.write(filePath,text);
 	}
 	
 	/**
@@ -220,11 +220,10 @@ public class DataBaseService {
 	 * @param packagePath
 	 * @param tableName
 	 */
-	public void makeService(String packagePath,String tableName) {
+	public void makeService( String rootPath , String packagePath,String tableName) {
 		String tableCamelName = this.stringToCamel(tableName);
 		String text = makeServiceStr(packagePath,tableCamelName);
-		String rootPath = ConstantUtils.SYSTEM_PATH ;
-		String filePath = rootPath + packagePath.replace(".", "/") +"/" +tableCamelName.toLowerCase() + "/service" + "/"+this.toUpperCaseFirstOne(tableCamelName)+"Service.java";
+		String filePath = rootPath + ConstantUtils.PACKAGE_PATH  + packagePath.replace(".", "/") +"/" +tableCamelName.toLowerCase() + "/service" + "/"+this.toUpperCaseFirstOne(tableCamelName)+"Service.java";
 		Fileutils.write(filePath,text);
 	}
 	
@@ -331,11 +330,10 @@ public class DataBaseService {
 	 * @param packagePath
 	 * @param tableName
 	 */
-	public void makeDao(String packagePath,String tableName) {
+	public void makeDao( String rootPath , String packagePath,String tableName) {
 		String tableCamelName = this.stringToCamel(tableName);
 		String text = makeDaoStr(packagePath,tableCamelName);
-		String rootPath = ConstantUtils.SYSTEM_PATH ;
-		String filePath = rootPath + packagePath.replace(".", "/") +"/" +tableCamelName.toLowerCase() + "/dao" + "/"+this.toUpperCaseFirstOne(tableCamelName)+"Dao.java";
+		String filePath = rootPath + ConstantUtils.PACKAGE_PATH  + packagePath.replace(".", "/") +"/" +tableCamelName.toLowerCase() + "/dao" + "/"+this.toUpperCaseFirstOne(tableCamelName)+"Dao.java";
 		Fileutils.write(filePath,text);
 	}
 	
@@ -376,11 +374,10 @@ public class DataBaseService {
 	 * @param packagePath
 	 * @param tableName
 	 */
-	public void makeEntity(String packagePath,String tableName , List<ColumnInfo> columnsList) {
+	public void makeEntity( String rootPath , String packagePath,String tableName , List<ColumnInfo> columnsList) {
 		String tableCamelName = this.stringToCamel(tableName);
 		String text = makeEntityStr(packagePath,tableCamelName ,columnsList);
-		String rootPath = ConstantUtils.SYSTEM_PATH ;
-		String filePath = rootPath + packagePath.replace(".", "/") +"/" +tableCamelName.toLowerCase() + "/entity" + "/"+this.toUpperCaseFirstOne(tableCamelName)+".java";
+		String filePath = rootPath + ConstantUtils.PACKAGE_PATH  + packagePath.replace(".", "/") +"/" +tableCamelName.toLowerCase() + "/entity" + "/"+this.toUpperCaseFirstOne(tableCamelName)+".java";
 		Fileutils.write(filePath,text);
 	}
 	
@@ -420,10 +417,9 @@ public class DataBaseService {
 	 * @param packagePath
 	 * @param tableName
 	 */
-	public void makeMapper(String packagePath,String tableName , List<ColumnInfo> columnsList) {
+	public void makeMapper( String rootPath , String packagePath,String tableName , List<ColumnInfo> columnsList) {
 		String tableCamelName = this.stringToCamel(tableName);
 		String text = makeMapperStr(packagePath,tableName ,columnsList);
-		String rootPath = ConstantUtils.SYSTEM_PATH ;
 		String filePath = rootPath + ConstantUtils.MAPPER_PATH + tableCamelName.toLowerCase() + "/" + this.toUpperCaseFirstOne(tableCamelName)+"Dao.xml";
 		Fileutils.write(filePath,text);
 	}
@@ -443,11 +439,11 @@ public class DataBaseService {
 				"  <resultMap id=\"BaseResultMap\" type=\"" + packagePath + "." + tableCamelName.toLowerCase() + ".entity." + className + "\">\r\n" ;
 		for (ColumnInfo columnInfo : columnsList) {
 			if ("PRI".equals(columnInfo.getColumnKey())) {
-				text += "    <" + columnInfo.getColumnName() + " column=\"" + columnInfo.getColumnName() + "\" jdbcType=\"" + columnInfo.getDataType().toUpperCase()  + "\" property=\"" + stringToCamel( columnInfo.getColumnName()) + "\" />\r\n"  ;
+				text += "    <id column=\"" + columnInfo.getColumnName() + "\" jdbcType=\"" + ConstantUtils.toMapperType(columnInfo.getDataType(), columnInfo.getColumnType()).toUpperCase()  + "\" property=\"" + stringToCamel( columnInfo.getColumnName()) + "\" />\r\n"  ;
 			
 				wherePri = "  where "+ columnInfo.getColumnName() + " = #{" + stringToCamel( columnInfo.getColumnName()) + "}\r\n  ";
 			}else {
-				text += "    <result column=\"" + columnInfo.getColumnName() + "\" jdbcType=\"" + columnInfo.getDataType()  + "\" property=\"" + stringToCamel( columnInfo.getColumnName()) + "\" />\r\n"  ;
+				text += "    <result column=\"" + columnInfo.getColumnName() + "\" jdbcType=\"" + ConstantUtils.toMapperType(columnInfo.getDataType(), columnInfo.getColumnType()).toUpperCase()   + "\" property=\"" + stringToCamel( columnInfo.getColumnName()) + "\" />\r\n"  ;
 				
 				updateSet += "			<if test=\"" + stringToCamel( columnInfo.getColumnName()) + " != null and " + stringToCamel( columnInfo.getColumnName()) + " !=''\" >\r\n" + 
 						"				 " + columnInfo.getColumnName() + " = #{" + stringToCamel( columnInfo.getColumnName()) + "} ,\r\n" + 
@@ -485,7 +481,7 @@ public class DataBaseService {
 				"		<where>\r\n" ;
 		for (ColumnInfo columnInfo : columnsList) {
 			if (!"PRI".equals(columnInfo.getColumnKey())) {
-				if (ConstantUtils.JAVA_TYPE_STRING.equals( ConstantUtils.toJavaType(columnInfo.getDataType(), columnInfo.getColumnComment()))) {
+				if (ConstantUtils.JAVA_MYSQL_TYPE_STRING.equals( ConstantUtils.toMapperType(columnInfo.getDataType(), columnInfo.getColumnComment()))) {
 					text += "			<if test=\"" + stringToCamel( columnInfo.getColumnName()) + " != null and " + stringToCamel( columnInfo.getColumnName()) + " !=''\" >\r\n" + 
 							"				 and " + columnInfo.getColumnName() + " LIKE '%' #{" + stringToCamel( columnInfo.getColumnName()) + "} '%'\r\n" + 
 							"			</if>\r\n" ; 
@@ -528,10 +524,9 @@ public class DataBaseService {
 	 * @param packagePath
 	 * @param tableName
 	 */
-	public void makeListJsp( String tableName , List<ColumnInfo> columnsList) {
+	public void makeListJsp( String rootPath ,  String tableName , List<ColumnInfo> columnsList) {
 		String tableCamelName = this.stringToCamel(tableName);
 		String text = makeListJspStr( tableCamelName ,columnsList);
-		String rootPath = ConstantUtils.SYSTEM_PATH ;
 		String filePath = rootPath + ConstantUtils.HTML_PATH +tableCamelName.toLowerCase() + "/list.html";
 		Fileutils.write(filePath,text);
 	}
@@ -635,10 +630,9 @@ public class DataBaseService {
 	 * @param packagePath
 	 * @param tableName
 	 */
-	public void makeFormJsp( String tableName , List<ColumnInfo> columnsList) {
+	public void makeFormJsp( String rootPath ,  String tableName , List<ColumnInfo> columnsList) {
 		String tableCamelName = this.stringToCamel(tableName);
 		String text = makeFormJspStr(tableCamelName ,columnsList);
-		String rootPath = ConstantUtils.SYSTEM_PATH ;
 		String filePath = rootPath + ConstantUtils.HTML_PATH +tableCamelName.toLowerCase() + "/form.html";
 		Fileutils.write(filePath,text);
 	}
@@ -771,11 +765,11 @@ public class DataBaseService {
 	 * 创建html文件
 	 * @param packagePath
 	 * @param tableName
+	 * @param tableName 
 	 */
-	public void makeDetailJsp(String tableName , List<ColumnInfo> columnsList) {
+	public void makeDetailJsp( String rootPath , String tableName, List<ColumnInfo> columnsList) {
 		String tableCamelName = this.stringToCamel(tableName);
 		String text = makeDetailJspStr(columnsList);
-		String rootPath = ConstantUtils.SYSTEM_PATH ;
 		String filePath = rootPath + ConstantUtils.HTML_PATH +tableCamelName.toLowerCase() + "/detail.html";
 		Fileutils.write(filePath,text);
 	}

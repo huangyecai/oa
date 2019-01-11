@@ -44,6 +44,7 @@
 			    and id = #{id} or parent_id = #{id}
 			</if>
 		</where>
+		order by sort_num
 	</select>
 	<insert id="insert" parameterType="com.hyc.oa.modules.system.menu.entity.Menu">
 		insert into menu (

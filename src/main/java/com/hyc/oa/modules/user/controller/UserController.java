@@ -1,5 +1,6 @@
 package com.hyc.oa.modules.user.controller;
 
+import java.security.Principal;
 import java.util.Date;
 import java.util.Map;
 
@@ -7,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextImpl;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -21,6 +24,8 @@ import com.hyc.oa.common.utils.ConstantUtils;
 import com.hyc.oa.common.utils.ResultUtils;
 import com.hyc.oa.modules.department.entity.Department;
 import com.hyc.oa.modules.department.service.DepartmentService;
+import com.hyc.oa.modules.login.entity.Login;
+import com.hyc.oa.modules.login.service.LoginService;
 import com.hyc.oa.modules.user.entity.User;
 import com.hyc.oa.modules.user.service.UserService;
 
@@ -36,12 +41,17 @@ public class UserController {
     private static final String DETAIL = COMMON+"detail";
 	private static final String FORBID = COMMON+"forbid";
 	private static final String ENABLE = COMMON+"enable";
+	private static final String SAVE_PASSWORD = COMMON+"savepassword";
+	private static final String UPPASSWORD = COMMON+"uppassword";
     
 	@Autowired
     private UserService userService;
 	
 	@Autowired
 	private DepartmentService departmentService;
+	
+	@Autowired
+	private LoginService loginService;
 	
 	//只需要加上下面这段即可，注意不能忘记注解
 	@InitBinder
@@ -210,6 +220,37 @@ public class UserController {
 		}
 		 
 		request.setAttribute("entity", entity);
+	}
+	
+	@RequestMapping(UPPASSWORD)
+	private void showUppassword( HttpServletRequest request){
+		
+	}
+	
+	@RequestMapping(SAVE_PASSWORD)
+	@ResponseBody
+	private Map<String, Object> savePassword(HttpServletRequest request)  {
+		SecurityContextImpl securityContextImpl = (SecurityContextImpl) request.getSession().getAttribute("SPRING_SECURITY_CONTEXT");
+		Principal principal = request.getUserPrincipal();
+		
+		String newPassword =request.getParameter("newPassword");
+		String oldPassowrd =request.getParameter("oldPassowrd");
+		
+		User user=userService.getUserByMobile(principal.getName());
+		// 登录密码，未加密的
+		String userPassowrd = securityContextImpl.getAuthentication().getCredentials().toString();
+		if (userPassowrd.equals(oldPassowrd)) {
+			Login login = new Login();
+			login.setUserId(user.getId());
+			login.setPassword(new BCryptPasswordEncoder().encode(newPassword));
+			login.setUpdateBy(user.getId());
+			login.setUpdateDate(new Date());
+			loginService.save(login);
+		}else {
+			return ResultUtils.error("原密码错误!");
+		}
+		return ResultUtils.success();
+		
 	}
    
 }

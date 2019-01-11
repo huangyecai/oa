@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"  
+xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <title>添加</title>
+    <link th:href="@{../../jquery-easyui-1.6.6/themes/default/easyui.css}" href="../../jquery-easyui-1.6.6/themes/default/easyui.css" rel="stylesheet" type="text/css">
+    <link th:href="@{../../jquery-easyui-1.6.6/themes/icon.css}" href="../../jquery-easyui-1.6.6/themes/icon.css" rel="stylesheet" type="text/css">
+    <script th:src="@{../../jquery-easyui-1.6.6/jquery.min.js}" src="../../jquery-easyui-1.6.6/jquery.min.js" type="text/javascript"></script>
+    <script th:src="@{../../jquery-easyui-1.6.6/jquery.easyui.min.js }" src="../../jquery-easyui-1.6.6/jquery.easyui.min.js" type="text/javascript"></script>
+    <script th:src="@{../../jquery-easyui-1.6.6/jquery.cookie.js }" src="../../jquery-easyui-1.6.6/jquery.cookie.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		function err(target, message){
+			var t = $(target);
+			if (t.hasClass('textbox-text')){
+				t = t.parent();
+			}
+			var m = t.next('.error-message');
+			if (!m.length){
+				m = $('<div class="error-message"></div>').insertAfter(t);
+			}
+			m.html(message);
+		}
+		function submitForm(){
+			  $('#mainForm').form('submit',{
+				onSubmit:function(){
+					return $(this).form('enableValidation').form('validate');
+				},
+				success:function(data){
+					var result = $.parseJSON(data); 
+					if (result.status == 200 || result.status == "200") {
+						/* alert("操作成功"); */
+						$.messager.alert("操作提示", "操作成功！", "warning", function () {
+							closeDialog();
+				        });
+					}else{
+						/* alert("操作失败"); */
+						$.messager.alert('警告','操作失败!','error');
+					}
+			    }
+			}); 
+		}
+		function clearForm(){
+			$('#mainForm').form('clear');
+		}
+	</script>
+</head>
+<body>
+  
+<div class="easyui-panel"   style="width:400px">
+		<div style="padding:10px 60px 20px 60px">
+		<th:block th:if="${entity.id} neq '' and ${entity.id} != null"  >
+			 <form id="mainForm"   action="userRole/update"    method="post" class="easyui-form">  
+		</th:block>
+		<th:block th:if="${entity.id} eq '' or ${entity.id} == null"  >
+			 <form id="mainForm"   action="userRole/create"    method="post" class="easyui-form"> 
+		</th:block>
+	     
+	    	<input name="id" type="hidden" th:value="${entity.id}">
+	    	<table cellpadding="5">
+	    		<tr>
+	    			<td>用户id:</td>
+	    			<td><input th:value="${entity.userId}" class="easyui-validatebox" type="text" name="userId" data-options="required:true"></input></td>
+	    		</tr>
+	    		<tr>
+	    			<td>角色id:</td>
+	    			<td><input th:value="${entity.roleId}" class="easyui-validatebox" type="text" name="roleId" data-options="required:true"></input></td>
+	    		</tr>
+	    	</table>
+	    </form>
+	    <div style="text-align:center;padding:5px">
+	    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()">提交</a>
+	    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">清空</a>
+ 	    	<a href="javascript:void(0)" id="colesssss" class="easyui-linkbutton" onclick="myCloseDialog()">关闭</a>
+	    </div>
+	    </div>
+	</div>
+	<script>
+		function myCloseDialog() {
+			closeDialog();
+		}
+		function submitForm(){
+			  $('#mainForm').form('submit',{
+				onSubmit:function(){
+					return $(this).form('enableValidation').form('validate');
+				},
+				success:function(data){
+					var result = $.parseJSON(data); 
+					if (result.status == 200 || result.status == "200") {
+						/* alert("操作成功");
+						top.closeDialog(); */
+						$.messager.alert("操作提示", "操作成功！", "warning", function () {
+							closeDialog();
+							 tabRefresh();
+				        });
+					}else{
+						/* alert("操作失败"); */
+						$.messager.alert('警告','操作失败!','error');
+					}
+			    }
+			}); 
+			 
+		}
+		function clearForm(){
+			$('#mainForm').form('clear');
+		}
+	</script>
+</body>
+</html>

@@ -152,7 +152,7 @@ public class MenuController {
 	    	String pageNumber = request.getParameter("pageNumber");
 	    	String pageSize = request.getParameter("pageSize");
 	    	int pn = 1;
-	    	int ps = 10;
+	    	int ps = 20;
 	    	if (StringUtils.isNotBlank(pageNumber)) {
 	    		pn = Integer.parseInt(pageNumber);
 			}
@@ -197,7 +197,7 @@ public class MenuController {
     	String pageNumber = request.getParameter("pageNumber");
     	String pageSize = request.getParameter("pageSize");
     	int pn = 1;
-    	int ps = 10;
+    	int ps = 20;
     	if (StringUtils.isNotBlank(pageNumber)) {
     		pn = Integer.parseInt(pageNumber);
 		}

@@ -105,12 +105,12 @@
 			hideRMenu();
 			/* //console.log(zTree.getSelectedNodes()[0]); */
 			if (zTree.getSelectedNodes()[0]) {
-				var src = 'form?parentId=' + zTree.getSelectedNodes()[0].id ;
-				openDialog( '添加菜单' , src);
+				var src = 'system/menu/form?parentId=' + zTree.getSelectedNodes()[0].id ;
+				/* openDialog( '添加菜单' , src); */
 			} else {
-				var src = 'form?parentId=0';
-				openDialog( '添加菜单' , src);
+				var src = 'system/menu/form?parentId=0';
 			}
+				parent.openDialog('添加菜单',src,400,'');
 		}
 		function removeTreeNode() {
 			hideRMenu();
@@ -222,15 +222,8 @@
 							<tr style="height: 100%">
 								<td>
 									<div id="tb" style="padding:5px;height:auto">
-										<div style="margin-bottom:5px">
-											<a href="javascript:void(0);" th:onclick="'openDialog(\'添加菜单\',\'form?parentId='+${id}+'\')'" class="easyui-linkbutton" iconCls="icon-add" plain="true"></a>
-											<a href="#"  class="easyui-linkbutton" iconCls="icon-edit" plain="true"></a>
-											<a href="#" class="easyui-linkbutton" iconCls="icon-save" plain="true"></a>
-											<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true"></a>
-											<a href="#" onclick="$('#dd').dialog('close');" class="easyui-linkbutton" iconCls="icon-remove" plain="true"></a>
-										</div>
 										<div>
-											<form id="searchForm" action="list" method="post">
+											<form id="searchForm" action="menuTree" method="post">
 												<input name="id" type="hidden" th:value="${param.id}">
 												名称：<!--/*@thymesVar id="param" type="com.hyc.oa.modules.system.menu.entity.Menu"*/-->
 												<input name="name" th:value="${param.name}" class="easyui-textbox" style="width:100px;height:32px">
@@ -261,9 +254,9 @@
 													<td th:text="${menu.code}"></td>
 													<td th:text="${menu.sortNum}"></td>
 													<td >
-														<a href="#" class="easyui-linkbutton" th:onclick="'openDialog(\'编辑菜单\',\'form?id='+${ menu.id}+'\')'">编辑</a>
-														<a href="#" class="easyui-linkbutton" th:onclick="'javascript:deleteMenu(\''+${ menu.id}+'\')'">删除</a>
-														<a href="#" class="easyui-linkbutton" th:onclick="'javascript:detail(\''+${ menu.id}+'\')'">详情</a>
+														<a href="#" class="easyui-linkbutton" th:onclick="'parent.openDialog(\'编辑菜单\',\'system/menu/form?id=' + ${menu.id} +'\',400,\'\')'">编辑</a>
+														<a href="#" class="easyui-linkbutton" th:onclick="'parent.del(\'system/menu/delete?id='+${ menu.id}+'\')'">删除</a>
+														<a href="#" class="easyui-linkbutton" th:onclick="'parent.openDialog(\'详情\',\'system/menu/detail?id=' + ${menu.id} +'\',400,\'\')'">详情</a>
 													</td>
 												</tr>
 											</th:block>
@@ -278,11 +271,6 @@
 								</td>
 							</tr>
 						</table>
-				
-						
-						<div id="dd" title="add" class="easyui-dialog"  style="height:auto; width:415px; text-align:center"
-						            data-options="resizable:true,modal:false,closed:true"  >
-						</div>
 					</div>
 				</td>
 			</tr>
@@ -299,31 +287,10 @@
 	</div>
 </div>
 <script type="text/javascript">
-    $(function () {
-    /* 	$("#dataTableBady").height($("#menuPanel").height()-36);
-		$(window).resize(function(){
-			$("#dataTableBady").height($("#menuPanel").height()-36);
-		}); */
-	})
-    function closeDialog() {
-    	$('#dd').dialog('close');
-    	/* window.location.reload(); */
-    	parent.parent.tabRefresh();
-	} 
 		function selectPage(pageNumber, pageSize){
 			/* alert('pageNumber:'+pageNumber+',pageSize:'+pageSize);
 			alert(window.location.pathname); */
 			window.location.href=window.location.pathname+'?pageNumber='+pageNumber+'&pageSize='+pageSize+'&'+$("form").serialize();
-		}
-		function openDialog(title,url) {
-			$('#dd').dialog({
-			    title: title,
-			    modal:true
-			});
-			 
-			$('#dd').dialog('refresh', url);
-			$('#dd').dialog('open');
-			$("#dd").panel("move",{top:$(document).scrollTop() + ($(window).height()* 0.5) -200});//位置设置
 		}
 		function deleteMenu(id) {
 			var url = 'delete'

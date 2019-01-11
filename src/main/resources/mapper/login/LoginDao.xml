@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hyc.oa.modules.login.dao.LoginDao">
+  <resultMap id="BaseResultMap" type="com.hyc.oa.modules.login.entity.Login">
+    <id column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="auth_flag" jdbcType="INTEGER" property="authFlag" />
+    <result column="login_ip" jdbcType="VARCHAR" property="loginIp" />
+    <result column="login_date" jdbcType="TIMESTAMP" property="loginDate" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+  </resultMap>
+  <sql id="Base_Column_List">
+user_id,password,auth_flag,login_ip,login_date,create_by,create_date,update_by,update_date
+  </sql>
+  
+  <select id="get" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from login
+  where user_id = #{userId}
+    </select>
+	<select id="list" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from login
+		<where>
+			<if test="password != null and password !=''" >
+				 and password LIKE '%' #{password} '%'
+			</if>
+			<if test="authFlag != null and authFlag !=''" >
+				 and auth_flag = #{authFlag} 
+			</if>
+			<if test="loginIp != null and loginIp !=''" >
+				 and login_ip LIKE '%' #{loginIp} '%'
+			</if>
+			<if test="loginDate != null and loginDate !=''" >
+				 and login_date = #{loginDate} 
+			</if>
+			<if test="createBy != null and createBy !=''" >
+				 and create_by LIKE '%' #{createBy} '%'
+			</if>
+			<if test="createDate != null and createDate !=''" >
+				 and create_date = #{createDate} 
+			</if>
+			<if test="updateBy != null and updateBy !=''" >
+				 and update_by LIKE '%' #{updateBy} '%'
+			</if>
+			<if test="updateDate != null and updateDate !=''" >
+				 and update_date = #{updateDate} 
+			</if>
+		</where>
+	</select>
+  
+  <delete id="delete" parameterType="java.lang.String">
+    update login set status = 3
+  where user_id = #{userId}
+    </delete>
+  
+  <insert id="insert" parameterType="com.hyc.oa.modules.login.entity.Login">
+    insert into login (		<include refid="Base_Column_List" />		)
+    values (#{userId} ,#{password} ,#{authFlag} ,#{loginIp} ,#{loginDate} ,#{createBy} ,#{createDate} ,#{updateBy} ,#{updateDate} )
+  </insert>
+  <update id="update" parameterType="com.hyc.oa.modules.login.entity.Login">
+    update login
+    <set>
+			<if test="password != null and password !=''" >
+				 password = #{password} ,
+			</if>
+			<if test="authFlag != null and authFlag !=''" >
+				 auth_flag = #{authFlag} ,
+			</if>
+			<if test="loginIp != null and loginIp !=''" >
+				 login_ip = #{loginIp} ,
+			</if>
+			<if test="loginDate != null  " >
+				 login_date = #{loginDate} ,
+			</if>
+			<if test="updateBy != null and updateBy !=''" >
+				 update_by = #{updateBy} ,
+			</if>
+			<if test="updateDate != null " >
+				 update_date = #{updateDate} ,
+			</if>
+    </set>
+  where user_id = #{userId}
+    </update>
+</mapper>

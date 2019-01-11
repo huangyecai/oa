@@ -24,6 +24,10 @@ public class ResultUtils {
 	public static Map<String, Object> error(Object obj) {
 		return result( 500 , "error" , obj);
 	}
+	
+	public static Map<String, Object> error(String message) {
+		return result( 500 , message , "");
+	}
 
 	public static Map<String, Object> error(String message,Object obj) {
 		return result( 500 , message , obj);

@@ -92,8 +92,17 @@
             <artifactId>pagehelper-spring-boot-starter</artifactId>
             <version>1.2.5</version>
         </dependency>
-        
-		        
+        <!-- 安全 -->
+        <dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<!--引入thymeleaf与Spring Security整合的依赖-->
+	   <dependency>
+	       <groupId>org.thymeleaf.extras</groupId>
+	       <artifactId>thymeleaf-extras-springsecurity4</artifactId>
+	       <version>3.0.2.RELEASE</version>
+	   </dependency>
     </dependencies>
 
     <build>

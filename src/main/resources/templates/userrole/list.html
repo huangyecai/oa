@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>角色管理</title>
+<title>管理</title>
 	<link th:href="@{../../jquery-easyui-1.6.6/themes/default/easyui.css}" href="../../../static/jquery-easyui-1.6.6/themes/default/easyui.css" rel="stylesheet" type="text/css">
     <link th:href="@{../../jquery-easyui-1.6.6/themes/icon.css}" href="../../../static/jquery-easyui-1.6.6/themes/icon.css" rel="stylesheet" type="text/css">
     <script th:src="@{../../jquery-easyui-1.6.6/jquery.min.js}" src="../../../static/jquery-easyui-1.6.6/jquery.min.js" type="text/javascript"></script>
@@ -24,7 +24,8 @@
 				<td>
 					<div id="tb" style="padding:5px;height:auto">
 						<div style="margin-bottom:5px">
-							<a href="javascript:void(0);" th:onclick="'parent.openDialog(\'添加角色\',\'role/form\',400,\'\')'" class="easyui-linkbutton" iconCls="icon-add" plain="true"></a>
+						
+							<a href="javascript:void(0);" sec:authorize="hasRole('ROLE_USERROLE')" th:onclick="'parent.openDialog(\'添加\',\'userrole/form\',400,\'\')'" class="easyui-linkbutton" iconCls="icon-add" plain="true"></a>
 							<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true"></a>
 							<a href="#" class="easyui-linkbutton" iconCls="icon-save" plain="true"></a>
 							<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true"></a>
@@ -32,46 +33,36 @@
 						</div>
 						<div>
 							<form id="searchForm" action="list" method="post">
-								<input name="id" type="hidden" th:value="${param.id}">
-								名称：
-								<input name="name" th:value="${param.name}" class="easyui-textbox" style="width:100px;height:32px">
-								说明：<input name="description" th:value="${param.description}" class="easyui-textbox" style="width:100px;height:32px">
-								编码：<input name="code" th:value="${param.code}" class="easyui-textbox" style="width:100px;height:32px">
-								等级：<input name="level" th:value="${param.level}" class="easyui-textbox" style="width:100px;height:32px">
-								类型：<input name="type" th:value="${param.type}" class="easyui-textbox" style="width:100px;height:32px">
+								用户id：<input name="userId" th:value="${param.userId}" class="easyui-textbox" style="width:100px;height:32px">
+								角色id：<input name="roleId" th:value="${param.roleId}" class="easyui-textbox" style="width:100px;height:32px">
+								创建时间：<input name="createDate" th:value="${param.createDate}" class="easyui-textbox" style="width:100px;height:32px">
+								创建者：<input name="createBy" th:value="${param.createBy}" class="easyui-textbox" style="width:100px;height:32px">
 								<a href="#" class="easyui-linkbutton" onclick="$('#searchForm').submit();" iconCls="icon-search">Search</a>
 							</form>
 						</div>
 					</div>
-					<table title="角色管理" class="easyui-datagrid" fitColumns="true" style="width:100%;height:100%" singleSelect="true" rownumbers="true" toolbar='#tb'>
+					<table title="管理" class="easyui-datagrid" fitColumns="true" style="width:100%;height:100%" singleSelect="true" rownumbers="true" toolbar='#tb'>
 						<thead>
 							<tr style="width: 100%">
-								<th field="name">名称</th>
-								<th field="description">说明</th>
-								<th field="code">编码</th>
-								<th field="level">等级</th>
-								<th field="type">类型</th>
-								<th field="status">状态</th>
+								<th field="userId">用户id</th>
+								<th field="roleId">角色id</th>
+								<th field="createDate">创建时间</th>
+								<th field="createBy">创建者</th>
 								<th field="操作">操作</th>
 							</tr>
 						</thead>
 						<tbody>
 							<th:block th:each="entity:${page.result}">
 								<tr>
-									<td th:text="${entity.name}"></td>
-									<td th:text="${entity.description}"></td>
-									<td th:text="${entity.code}"></td>
-									<td th:text="${entity.level}"></td>
-									<td th:text="${entity.type}"></td>
-									<td th:switch="${entity.status}">
-								        <th:block th:case="1"><font color='green'>有效</font></th:block>
-								        <th:block th:case="2"><font color='blue'>禁止</font></th:block>
-								        <th:block th:case="3"><font color='red'>无效</font></th:block>
-									</td>
+									<td th:text="${entity.id}"></td>
+									<td th:text="${entity.userId}"></td>
+									<td th:text="${entity.roleId}"></td>
+									<td th:text="${entity.createDate}"></td>
+									<td th:text="${entity.createBy}"></td>
 									<td >
-										<a href="#" class="easyui-linkbutton" th:onclick="'parent.openDialog(\'添加角色\',\'role/form?id=' + ${entity.id} +'\',400,\'\')'">编辑</a>
-										<a href="#" class="easyui-linkbutton" th:onclick="'parent.del(\'role/delete?id='+${ entity.id}+'\')'">删除</a>
-										<a href="#" class="easyui-linkbutton" th:onclick="'parent.openDialog(\'详情\',\'role/detail?id=' + ${entity.id} +'\',400,\'\')'">详情</a>
+										<a href="#" class="easyui-linkbutton" th:onclick="'parent.openDialog(\'编辑\',\'userrole/form?id=' + ${entity.id} +'\',400,\'\')'">编辑</a>
+										<a href="#" class="easyui-linkbutton" th:onclick="'parent.del(\'userrole/delete?id='+${ entity.id}+'\')'">删除</a>
+										<a href="#" class="easyui-linkbutton" th:onclick="'parent.openDialog(\'详情\',\'userrole/detail?id=' + ${entity.id} +'\',400,\'\')'">详情</a>
 									</td>
 								</tr>
 							</th:block>

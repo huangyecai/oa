@@ -2,6 +2,8 @@ package com.hyc.oa.modules.role.entity;
 
 import java.util.Date;
 
+import com.hyc.oa.common.utils.ConstantUtils;
+
 public class Role {
     private String id;
 
@@ -92,7 +94,9 @@ public class Role {
     public void setStatus(Integer status) {
         this.status = status;
     }
-
+    public String getStatusDesc() {
+        return ConstantUtils.statusDescMap.get(status);
+    }
     public String getRemark() {
         return remark;
     }

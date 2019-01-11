@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hyc.oa.modules.user.dao.UserRoleDao">
+  <resultMap id="BaseResultMap" type="com.hyc.oa.modules.user.entity.UserRole">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="role_id" jdbcType="VARCHAR" property="roleId" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="role.code" jdbcType="VARCHAR" property="role.code" />
+    <result column="role.name" jdbcType="VARCHAR" property="role.name" />
+  </resultMap>
+  <sql id="Base_Column_List">
+id,user_id,role_id,create_date,create_by
+  </sql>
+  
+  <select id="get" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user_role
+  where id = #{id}
+    </select>
+	<select id="list" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from user_role
+		<where>
+			<if test="userId != null and userId !=''" >
+				 and user_id LIKE '%' #{userId} '%'
+			</if>
+			<if test="roleId != null and roleId !=''" >
+				 and role_id LIKE '%' #{roleId} '%'
+			</if>
+			<if test="createDate != null and createDate !=''" >
+				 and create_date = #{createDate} 
+			</if>
+			<if test="createBy != null and createBy !=''" >
+				 and create_by LIKE '%' #{createBy} '%'
+			</if>
+		</where>
+	</select>
+	
+	<select id="getByUserId" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		ur.id,ur.user_id,ur.role_id,ur.create_date,ur.create_by,
+		r.code as "role.code",
+		r.name as "role.name"
+		from user_role ur
+		left join role r on ur.user_id = r.id
+		where user_id = #{userId} 
+	</select>
+  
+  <delete id="delete" parameterType="java.lang.String">
+    delete user_role 
+  where id = #{id}
+    </delete>
+  
+  <insert id="insert" parameterType="com.hyc.oa.modules.user.entity.UserRole">
+    insert into user_role (		<include refid="Base_Column_List" />		)
+    values (#{id} ,#{userId} ,#{roleId} ,#{createDate} ,#{createBy} )
+  </insert>
+  <update id="update" parameterType="com.hyc.oa.modules.user.entity.UserRole">
+    update user_role
+    <set>
+			<if test="userId != null and userId !=''" >
+				 user_id = #{userId} ,
+			</if>
+			<if test="roleId != null and roleId !=''" >
+				 role_id = #{roleId} ,
+			</if>
+			<if test="createDate != null and createDate !=''" >
+				 create_date = #{createDate} ,
+			</if>
+			<if test="createBy != null and createBy !=''" >
+				 create_by = #{createBy} ,
+			</if>
+    </set>
+  where id = #{id}
+    </update>
+</mapper>

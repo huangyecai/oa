@@ -2,11 +2,13 @@ package com.hyc.oa.modules.user.entity;
 
 import com.hyc.oa.common.base.entity.BaseEntity;
 import com.hyc.oa.modules.department.entity.Department;
+import com.hyc.oa.modules.role.entity.Role;
 
 import org.apache.catalina.core.ApplicationContext;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.Date;
+import java.util.Set;
 
 public class User extends BaseEntity<User> {
 
@@ -194,7 +196,7 @@ public class User extends BaseEntity<User> {
 	private Date loginDate;
 	
 	
-	 
+	private transient Set<Role> roles;
 
 	/**
 	 * 密码
@@ -880,6 +882,14 @@ public class User extends BaseEntity<User> {
 
 	public void setOrganization(Department organization) {
 		this.organization = organization;
+	}
+
+	public Set<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
 	}
 	
 	

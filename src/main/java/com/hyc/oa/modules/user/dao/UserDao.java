@@ -23,4 +23,6 @@ public interface UserDao {
 	public int forbid(String id);
 
 	public int enable(String id);
+
+	public User getByMobile(String mobile);
 }

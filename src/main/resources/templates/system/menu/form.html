@@ -42,10 +42,10 @@
 <div class="easyui-panel"   style="width:400px">
 		<div style="padding:10px 60px 20px 60px">
 		<th:block th:if="${entity.id} neq '' and ${entity.id} != null"  >
-			 <form id="mainForm"   action="update"    method="post" class="easyui-form">  
+			 <form id="mainForm"   action="system/menu/update"    method="post" class="easyui-form">  
 		</th:block>
 		<th:block th:if="${entity.id} eq '' or ${entity.id} == null"  >
-			 <form id="mainForm"   action="create"    method="post" class="easyui-form"> 
+			 <form id="mainForm"   action="system/menu/create"    method="post" class="easyui-form"> 
 		</th:block>
 	     
 	    	<input name="id" type="hidden" th:value="${entity.id}">
@@ -78,35 +78,36 @@
 	    	
 	    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()">提交</a>
 	    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">清空</a>
- 	    	<a href="javascript:void(0)" id="colesssss" class="easyui-linkbutton" onclick="closeDialog1()">关闭</a>
+ 	    	<a href="javascript:void(0)" id="colesssss" class="easyui-linkbutton" onclick="myCloseDialog()">关闭</a>
 	    </div>
 	    </div>
 	</div>
 	<script>
-		function closeDialog1() {
-			closeDialog();
-		}
-		function submitForm(){
-			  $('#mainForm').form('submit',{
-				onSubmit:function(){
-					return $(this).form('enableValidation').form('validate');
-				},
-				success:function(data){
-					var result = $.parseJSON(data); 
-					if (result.status == 200 || result.status == "200") {
-						/* alert("操作成功");
-						top.closeDialog(); */
-						$.messager.alert("操作提示", "操作成功！", "warning", function () {
-							closeDialog();
-				        });
-					}else{
-						/* alert("操作失败"); */
-						$.messager.alert('警告','操作失败!','error');
-					}
-			    }
-			}); 
-			 
-		}
+	function myCloseDialog() {
+		closeDialog();
+	}
+	function submitForm(){
+		  $('#mainForm').form('submit',{
+			onSubmit:function(){
+				return $(this).form('enableValidation').form('validate');
+			},
+			success:function(data){
+				var result = $.parseJSON(data); 
+				if (result.status == 200 || result.status == "200") {
+					/* alert("操作成功");
+					top.closeDialog(); */
+					$.messager.alert("操作提示", "操作成功！", "warning", function () {
+						closeDialog();
+						 tabRefresh();
+			        });
+				}else{
+					/* alert("操作失败"); */
+					$.messager.alert('警告','操作失败!','error');
+				}
+		    }
+		}); 
+		 
+	}
 		function clearForm(){
 			$('#mainForm').form('clear');
 		}

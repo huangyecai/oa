@@ -64,17 +64,20 @@ public class DataBaseController {
 		
 		String packagePath = request.getParameter("packagePath");
 		if (StringUtils.isBlank(packagePath)) {
-			packagePath = ConstantUtils.PACKAGE_PATH ;
+			packagePath = ConstantUtils.JAVA_PACKAGE_PATH ;
 		}
-		System.out.println(ConstantUtils.SYSTEM_PATH);
-		dataBaseService.makeController(packagePath, tableName);
-		dataBaseService.makeService(packagePath, tableName);
-		dataBaseService.makeDao(packagePath, tableName);
-		dataBaseService.makeEntity(packagePath, tableName , columnsList);
-		dataBaseService.makeMapper(packagePath, tableName , columnsList);
-		dataBaseService.makeListJsp( tableName , columnsList);
-		dataBaseService.makeFormJsp( tableName , columnsList);
-		dataBaseService.makeDetailJsp( tableName , columnsList);
+		String rootPath = "F:/hyc/code/";
+		if (StringUtils.isBlank(rootPath)) {
+			rootPath = ConstantUtils.SYSTEM_PATH ;
+		}
+		dataBaseService.makeController( rootPath , packagePath, tableName);
+		dataBaseService.makeService( rootPath , packagePath, tableName);
+		dataBaseService.makeDao( rootPath , packagePath, tableName);
+		dataBaseService.makeEntity( rootPath , packagePath, tableName , columnsList);
+		dataBaseService.makeMapper( rootPath,packagePath, tableName , columnsList);
+		dataBaseService.makeListJsp( rootPath, tableName , columnsList);
+		dataBaseService.makeFormJsp( rootPath , tableName , columnsList);
+		dataBaseService.makeDetailJsp( rootPath , tableName , columnsList);
 		return ResultUtils.success();
 	}
 }

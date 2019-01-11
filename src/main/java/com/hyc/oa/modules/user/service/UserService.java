@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hyc.oa.common.utils.ConstantUtils;
+import com.hyc.oa.modules.login.dao.LoginDao;
+import com.hyc.oa.modules.login.entity.Login;
+import com.hyc.oa.modules.login.service.LoginService;
 import com.hyc.oa.modules.user.dao.UserDao;
 import com.hyc.oa.modules.user.entity.User;
 
@@ -16,8 +19,12 @@ import com.hyc.oa.modules.user.entity.User;
 public class UserService implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
     @Autowired
     private UserDao userDao;
+    
+    @Autowired
+    private LoginService loginService;
 
     public User get(String id){
         return userDao.getById(id);
@@ -40,6 +47,9 @@ public class UserService implements Serializable {
 	private String create(User entity) {
 		entity.preInsert();
 		userDao.insert(entity);
+		Login loginEntity = new Login();
+		loginEntity.setUserId(entity.getId());
+		loginService.save(loginEntity);
 		return entity.getId();
 	}
 	
@@ -86,5 +96,9 @@ public class UserService implements Serializable {
 			return true;
 		}
 		return false;
+	}
+
+	public User getUserByMobile(String mobile) {
+		return userDao.getByMobile(mobile);
 	}
 }

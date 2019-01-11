@@ -57,6 +57,7 @@
 		WHERE
 		u.id = #{id}
 	</select>
+	
 	<insert id="insert">
 		insert into user (id, family_name,
 		first_name,
